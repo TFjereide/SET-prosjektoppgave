@@ -2,7 +2,7 @@ package com.set10;
 import java.util.ArrayList;
 
 public class StoppestedLeggTil {
-    private ArrayList<Stoppested> stoppesteder = new ArrayList<>();
+    public ArrayList<Stoppested> stoppesteder = new ArrayList<>();
 
 
     public void leggTilStoppested(int id, String adresse) {
@@ -15,7 +15,6 @@ public class StoppestedLeggTil {
             System.out.println(s);
         }
     }
-
 
 
 }

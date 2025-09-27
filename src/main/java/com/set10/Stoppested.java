@@ -1,8 +1,8 @@
 package com.set10;
 
 public class Stoppested {
-    private int id;
-    private String adresse;
+    public int id;
+    public String adresse;
 
 
     public Stoppested(int id, String adresse) {
@@ -17,10 +17,6 @@ public class Stoppested {
     }
 
 
-    public String getAdresse() {return adresse;}
-    public int getId() {return id;}
 
     
-
-
 }
