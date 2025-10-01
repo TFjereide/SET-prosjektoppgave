@@ -1,7 +1,30 @@
 package com.set10;
+import imgui.ImGui;
+import imgui.app.Application;
+import imgui.app.Configuration;
 
-public class Main {
+public class Main extends Application {
+
+    @Override
+    protected void configure(Configuration config) {
+        config.setTitle("Østfold trafikk premium");
+    }
+
+    @Override
+    public void process() {
+        ImGui.begin("Debug meny");
+        ImGui.text("Hello world!");
+        if (ImGui.button("Click!")){
+            System.out.println("Clicked!");
+        }
+        ImGui.end();
+
+        // uncomment hvis du vil se mer på hva imgui kan gjøre.
+        // ImGui.showDemoWindow();
+
+    }
+
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        launch(new Main());
     }
 }
