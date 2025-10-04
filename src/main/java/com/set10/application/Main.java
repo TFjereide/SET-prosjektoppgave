@@ -1,4 +1,4 @@
-package com.set10;
+package com.set10.application;
 import imgui.ImGui;
 import imgui.app.Application;
 import imgui.app.Configuration;
@@ -21,6 +21,10 @@ public class Main extends Application {
 
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();
+    }
+    @Override
+    protected void preRun(){
+
 
     }
 
