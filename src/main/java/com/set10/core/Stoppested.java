@@ -13,10 +13,8 @@ public class Stoppested {
         this.adresse = adresse;
     }
 
-    // Legg til avgang FRA dette stoppet
-    // kode fra Isma
-    public void leggTilAvgang(int ruteNr, LocalDateTime tidspunkt, int linje) {
-        avganger.add(new Avgang(ruteNr, tidspunkt, linje));
+    public void leggTilAvgang(int ruteNr, LocalDateTime tidspunkt) {
+        avganger.add(new Avgang(ruteNr, tidspunkt));
     }
 
     public void visAvganger() {

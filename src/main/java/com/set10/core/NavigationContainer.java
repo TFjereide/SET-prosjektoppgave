@@ -1,13 +1,13 @@
 package com.set10.core;
 import java.util.ArrayList;
 
-public class NavigationProvider {
+public class NavigationContainer {
 
-    
     public ArrayList<Stoppested> stoppesteder = new ArrayList<>();
+    public ArrayList<Rute> ruter = new ArrayList<>();
 
-    public void leggTilStoppested(int id, String adresse) {
-        stoppesteder.add(new Stoppested(id, adresse));
+    public NavigationContainer(){
+
     }
 
     public void visStoppesteder() {
