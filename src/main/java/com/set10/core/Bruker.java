@@ -1,13 +1,11 @@
-package com.set10;
+package com.set10.core;
 
 import java.util.ArrayList;
-
 public class Bruker {
     public int brukerId;
     public String navn;
     public ArrayList<Billett> aktiveBilletter;
     public ArrayList<Billett> gamleBiletter;
-
 
     private static int nesteLedigId = 1;
 
