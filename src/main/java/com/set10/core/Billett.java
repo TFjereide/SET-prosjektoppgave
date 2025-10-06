@@ -1,4 +1,4 @@
-package com.set10;
+package com.set10.core;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 

@@ -1,21 +1,19 @@
-package com.set10;
+package com.set10.core;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Avgang {
-    int ruteNr;
+    int ruteID;
     LocalDateTime tidspunkt;
-    int linje;
 
-    public Avgang(int ruteNr, LocalDateTime tidspunkt, int linje) {
-        this.ruteNr = ruteNr;
+    public Avgang(int ruteID, LocalDateTime tidspunkt) {
+        this.ruteID = ruteID;
         this.tidspunkt = tidspunkt;
-        this.linje = linje;
     }
 
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        return "Linje " + linje + " (Rute " + ruteNr + ") - Avgang: " + tidspunkt.format(formatter);
+        return "(Rute " + ruteID + ") - Avgang: " + tidspunkt.format(formatter);
     }
 }
