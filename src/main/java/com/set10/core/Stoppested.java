@@ -26,7 +26,7 @@ public class Stoppested {
 
     @Override
     public String toString() {
-        return "StoppID: " + id + " Stoppested: " + adresse + ".";
+        return "StoppID: " + id + " Adresse: " + adresse + ".";
     }
 
 

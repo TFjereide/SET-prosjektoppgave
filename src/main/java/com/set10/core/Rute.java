@@ -4,34 +4,34 @@ import java.util.ArrayList;
 
 public class Rute {
     public int id;
-    public ArrayList<Stoppested> stops = new ArrayList<>();
+    public ArrayList<Stoppested> stopp = new ArrayList<>();
 
     public Rute(int id) {
         this.id = id;
     };
 
     public void leggTilStopp(Stoppested stoppested) {
-        stops.add(stoppested);
+        stopp.add(stoppested);
     }
 
-    public double calculateRouteLength() {
-        int numberOfStops = stops.size();
-        double totalDistance = 0;
+    public double beregnRuteLengde() {
+        int antallStopp  = stopp.size();
+        double totalAvstand = 0;
 
-        for (int x = 0; x < numberOfStops - 1; x++) {
-            Stoppested currentStop = stops.get(x);
-            Stoppested nextStop = stops.get(x + 1);
-            totalDistance += GPSService.distanceBetweenStops(currentStop, nextStop);
+        for (int x = 0; x < antallStopp - 1; x++) {
+            Stoppested nåværendeStopp = stopp.get(x);
+            Stoppested nesteStopp = stopp.get(x + 1);
+            totalAvstand += GPSTjeneste.avstandMellomStopp(nåværendeStopp, nesteStopp);
         }
 
-        return totalDistance;
+        return totalAvstand;
     }
 
-    public void visRoute() {
-        System.out.println("Rute med " + stops.size() + " stopp:");
-        for (Stoppested s : stops) {
+    public void visRute() {
+        System.out.println("Rute med " + stopp.size() + " stopp:");
+        for (Stoppested s : stopp) {
             System.out.println("  - " + s);
         }
-        System.out.println("Total lengde: " + calculateRouteLength() + " km");
+        System.out.println("Total lengde: " + beregnRuteLengde() + " km");
     }
 }
