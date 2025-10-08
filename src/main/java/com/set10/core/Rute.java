@@ -1,5 +1,6 @@
 package com.set10.core;
-
+import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 
 public class Rute {
@@ -25,6 +26,14 @@ public class Rute {
         }
 
         return totalDistance;
+    }
+
+    public List<Integer> hentSonerFraRute() {
+        Set<Integer> soner = new java.util.HashSet<>();
+        for (Stoppested stopp : stops) {
+            soner.add(stopp.getSone());
+        }
+        return new ArrayList<>(soner);
     }
 
     public void visRoute() {

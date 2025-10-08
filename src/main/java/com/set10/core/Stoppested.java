@@ -6,11 +6,13 @@ import java.util.ArrayList;
 public class Stoppested {
     public int id;
     public String adresse;
-    ArrayList<Avgang> avganger = new ArrayList<>(); 
+    ArrayList<Avgang> avganger = new ArrayList<>();
+    public int sone;
 
-    public Stoppested(int id, String adresse) {
+    public Stoppested(int id, String adresse, int sone) {
         this.id = id;
         this.adresse = adresse;
+        this.sone = sone;
     }
 
     public void leggTilAvgang(int ruteNr, LocalDateTime tidspunkt) {
@@ -22,6 +24,10 @@ public class Stoppested {
         for (Avgang a : avganger) {
             System.out.println("  " + a);
         }
+    }
+
+    public int getSone() {
+        return sone;
     }
 
     @Override
