@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class NavigationContainerTests {
+public class NavigasjonsTjenesteTester {
 
     @Test
     @DisplayName("can create and link navigation data")
-    void createAndLinkNavigationData() {
-        NavigationContainer navcontainer = new NavigationContainer();
+    void LagOgLenkeNavigasjonsData() {
+        Navigasjonstjeneste navcontainer = new Navigasjonstjeneste();
         navcontainer.stoppesteder.add(new Stoppested(0, "a"));
         navcontainer.stoppesteder.add(new Stoppested(1, "b"));
         navcontainer.stoppesteder.add(new Stoppested(2, "c"));
@@ -26,10 +26,10 @@ public class NavigationContainerTests {
         rute.leggTilStopp(navcontainer.stoppesteder.get(3));
         rute.leggTilStopp(navcontainer.stoppesteder.get(4));
 
-        assertEquals(rute.stops.get(0), navcontainer.stoppesteder.get(0));
-        assertEquals(rute.stops.get(2), navcontainer.stoppesteder.get(2));
+        assertEquals(rute.stopp.get(0), navcontainer.stoppesteder.get(0));
+        assertEquals(rute.stopp.get(2), navcontainer.stoppesteder.get(2));
 
-        assertEquals(rute.stops.size(), 5);
+        assertEquals(rute.stopp.size(), 5);
         assertEquals(navcontainer.stoppesteder.size(), 5);
     }
 
