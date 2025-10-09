@@ -21,6 +21,7 @@ public class Main extends Application {
     }
 
     // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
+    // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
     @Override
     public void process() {
         ImGui.begin("Debug meny");
@@ -38,6 +39,8 @@ public class Main extends Application {
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();
     }
+
+    // Dette er initialiseringskode, som kjøres før oppstart av programmet.
 
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
