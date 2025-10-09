@@ -1,8 +1,10 @@
 package com.set10.application;
 import java.util.ArrayList;
 
+import com.set10.core.Avgang;
 import com.set10.core.Navigasjonstjeneste;
 import com.set10.core.Stoppested;
+import com.set10.database.Datadepot;
 
 import imgui.ImGui;
 import imgui.app.Application;
@@ -12,6 +14,7 @@ public class Main extends Application {
 
     // Slettes senere. Ikke bruk denne noesteds
     private ArrayList<Stoppested> testStoppesteder = new ArrayList<>();
+    private Datadepot depot = new Datadepot();
 
     @Override
     protected void configure(Configuration config) {
@@ -31,7 +34,21 @@ public class Main extends Application {
                 ImGui.separator();
             }
         }
-        ImGui.end();
+        // Denne skal vise faktiske stoppesteder med avganger
+        if  (ImGui.collapsingHeader("Stoppesteder (med innhold)")){
+            ImGui.separator();
+            for (Stoppested stoppested : depot.hentStoppesteder()){
+                ImGui.text(stoppested.toString());
+
+                ImGui.indent();
+                for (Avgang a : stoppested.hentAvganger()){
+                    ImGui.text(a.toString());
+                }
+                ImGui.unindent();
+                ImGui.separator();
+            }
+        }
+        ImGui.end();    
 
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();

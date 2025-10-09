@@ -3,11 +3,11 @@ package com.set10.core;
 import java.util.ArrayList;
 
 public class Rute {
-    public int id;
+    public int ruteID;
     public ArrayList<Stoppested> stopp = new ArrayList<>();
 
-    public Rute(int id) {
-        this.id = id;
+    public Rute(int ruteID) {
+        this.ruteID = ruteID;
     };
 
     public void leggTilStopp(Stoppested stoppested) {
@@ -34,4 +34,9 @@ public class Rute {
         }
         System.out.println("Total lengde: " + beregnRuteLengde() + " km");
     }
+
+    public int hentRuteID() {
+        return ruteID;
+  }
+
 }
