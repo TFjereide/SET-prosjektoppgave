@@ -1,8 +1,11 @@
 package com.set10.application;
 import java.util.ArrayList;
 
+import com.set10.core.Datadepot;
 import com.set10.core.Navigasjonstjeneste;
+import com.set10.core.Rute;
 import com.set10.core.Stoppested;
+import com.set10.database.DatabaseText;
 
 import imgui.ImGui;
 import imgui.app.Application;
@@ -10,8 +13,7 @@ import imgui.app.Configuration;
 
 public class Main extends Application {
 
-    // Slettes senere. Ikke bruk denne noesteds
-    private ArrayList<Stoppested> testStoppesteder = new ArrayList<>();
+    Datadepot datadepot;
 
     @Override
     protected void configure(Configuration config) {
@@ -26,7 +28,7 @@ public class Main extends Application {
         // Kan lage enkle listefunksjoner Relativt enkelt
         if(ImGui.collapsingHeader("Stoppesteder")){
             ImGui.separator();
-            for (Stoppested stoppested : testStoppesteder) {
+            for (Stoppested stoppested : datadepot.stoppestedCache) {
                 ImGui.text(stoppested.toString());   
                 ImGui.separator();
             }
@@ -41,11 +43,17 @@ public class Main extends Application {
     @Override
     protected void preRun(){
         
+        datadepot = new Datadepot(new DatabaseText());
+        
         for(int i = 0; i < 5; i+=1){
-            testStoppesteder.add(
+            datadepot.opprettStoppested(
                 new Stoppested(i, "tilfeldig addresse")
             );
         }
+        Rute rute = new Rute(0, datadepot.stoppestedCache);
+        datadepot.opprettRute(rute);
+        
+        datadepot.lagreTilDisk();
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres

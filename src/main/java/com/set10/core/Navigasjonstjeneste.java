@@ -1,8 +1,6 @@
 package com.set10.core;
 import java.util.ArrayList;
 
-import com.set10.database.Datadepot;
-
 
 /**
  * Denne klassen har en serie med metoder ment for å kunne utføre grunnleggende handlinger 
