@@ -2,9 +2,14 @@ package com.set10.application;
 
 
 import com.set10.core.Datadepot;
+
+import com.set10.database.DatabaseText;
+
+
 import com.set10.core.Navigasjonstjeneste;
 import com.set10.core.Stoppested;
 import com.set10.core.Rute;
+import com.set10.core.Avgang;
 import com.set10.database.DatabaseText;
 
 import imgui.ImGui;
@@ -15,6 +20,7 @@ public class Main extends Application {
 
     Navigasjonstjeneste navigasjonstjeneste;
     Datadepot datadepot;
+    private com.set10.database.Datadepot depot = new com.set10.database.Datadepot();
 
     @Override
     protected void configure(Configuration config) {
@@ -27,10 +33,24 @@ public class Main extends Application {
         ImGui.begin("Debug meny");
     
         // Kan lage enkle listefunksjoner Relativt enkelt
-        if(ImGui.collapsingHeader("Stoppesteder")){
+        // if(ImGui.collapsingHeader("Stoppesteder")){
+        //     ImGui.separator();
+        //     for (Stoppested stoppested : datadepot.stoppestedCache) {
+        //         ImGui.text(stoppested.toString());   
+        //         ImGui.separator();
+        //     }
+        // }
+        // Denne skal vise faktiske stoppesteder med avganger
+        if  (ImGui.collapsingHeader("Stoppesteder (med innhold)")){
             ImGui.separator();
-            for (Stoppested stoppested : datadepot.stoppestedCache) {
-                ImGui.text(stoppested.toString());   
+            for (Stoppested stoppested : depot.hentStoppesteder()){
+                ImGui.text(stoppested.toString());
+
+                ImGui.indent();
+                for (Avgang a : stoppested.hentAvganger()){
+                    ImGui.text(a.toString());
+                }
+                ImGui.unindent();
                 ImGui.separator();
             }
         }
@@ -41,7 +61,7 @@ public class Main extends Application {
                 ImGui.separator();
             }
         }
-        ImGui.end();
+        ImGui.end();    
 
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();

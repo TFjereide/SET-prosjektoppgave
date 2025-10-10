@@ -25,16 +25,16 @@ public class DatabaseText implements IDatabase{
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         for(int i = 0; i < datadepot.stoppestedCache.size(); i++){
             Stoppested s = datadepot.stoppestedCache.get(i);
-            writer.append("s;"+s.id +";"+ s.adresse+"\n");
+            writer.append("s;"+s.stoppID +";"+ s.navn+"\n");
         }
         for(int i = 0; i < datadepot.ruteCache.size(); i++){
             Rute r = datadepot.ruteCache.get(i);
             String stopp = "";
             for(int j = 0; j < r.stopp.size()-1; j++){
-                stopp += r.stopp.get(j).id +",";
+                stopp += r.stopp.get(j).stoppID +",";
             }
-            stopp += r.stopp.get(r.stopp.size()-1).id;
-            writer.append("r;"+r.id +";"+stopp+"\n");
+            stopp += r.stopp.get(r.stopp.size()-1).stoppID;
+            writer.append("r;"+r.ruteID +";"+stopp+"\n");
         }
         writer.close();
     }
