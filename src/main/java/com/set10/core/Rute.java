@@ -10,6 +10,11 @@ public class Rute {
         this.ruteID = ruteID;
     };
 
+    public Rute(int id, ArrayList<Stoppested> stopp) {
+        this.id = id;
+        this.stopp = stopp;
+    };
+
     public void leggTilStopp(Stoppested stoppested) {
         stopp.add(stoppested);
     }
