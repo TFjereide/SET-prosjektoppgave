@@ -3,5 +3,4 @@ s;1;tilfeldig addresse
 s;2;tilfeldig addresse
 s;3;tilfeldig addresse
 s;4;tilfeldig addresse
-ruter:1
-r;0;[0,1,2,3,4]
+r;0;0,1,2,3,4
