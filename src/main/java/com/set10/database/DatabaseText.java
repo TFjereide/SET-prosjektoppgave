@@ -14,10 +14,14 @@ import com.set10.core.Stoppested;
 import com.set10.core.Datadepot;
 
 
+/* 
+ * Dataformat skamløst stjålet fra .obj 
+ * 
+*/
 public class DatabaseText implements IDatabase{
     final String path = "data\\data.txt";
 
-    public void serialiser(Datadepot datadepot) throws IOException{
+    public void serialiser(Datadepot datadepot) throws Exception{
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         for(int i = 0; i < datadepot.stoppestedCache.size(); i++){
             Stoppested s = datadepot.stoppestedCache.get(i);
@@ -35,7 +39,7 @@ public class DatabaseText implements IDatabase{
         writer.close();
     }
 
-    public void deserialiser(Datadepot datadepot) throws FileNotFoundException, IOException{
+    public void deserialiser(Datadepot datadepot) throws Exception{
         BufferedReader reader = new BufferedReader(new FileReader(path));
 
         datadepot.stoppestedCache = new ArrayList<>();
@@ -63,5 +67,6 @@ public class DatabaseText implements IDatabase{
                 );
             }
         }
+        reader.close();
     }
 }

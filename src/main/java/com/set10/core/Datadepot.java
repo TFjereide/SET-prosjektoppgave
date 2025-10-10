@@ -11,7 +11,9 @@ public class Datadepot {
     // Holder eventuelt på en database
     public IDatabase database;
 
-    public ArrayList<Bruker> brukerCache = new ArrayList<>();
+    public ArrayList<Bruker> brukerCache = new ArrayList<>(); // ikke lagret for øyeblikket
+    public ArrayList<Billett> billettCache = new ArrayList<>(); // ikke lagret for øyeblikket
+
     public ArrayList<Stoppested> stoppestedCache = new ArrayList<>();
     public ArrayList<Rute> ruteCache = new ArrayList<>();
 
@@ -20,24 +22,15 @@ public class Datadepot {
         this.database = database;
     }
 
-    public void lagreTilDisk(){
-        try {
-            database.serialiser(this);
-        }
-        catch(Exception e){
-            System.err.println("Kan ikke skrive til fil..");
-        }
+    public void lagreTilDisk() throws Exception{
+        database.serialiser(this);
     }
 
-    public void lasteFraDisk(){
-        try{
-            database.deserialiser(this);
-        }
-        catch(Exception e){
-            System.err.println("Kan ikke laste fra fil..");
-        }
+    public void lasteFraDisk() throws Exception{
+        database.deserialiser(this);
     }
 
+    // Returnerer id til nylaget objekt 
     public int opprettBruker(Bruker bruker){
         brukerCache.add(bruker);
         return brukerCache.size()-1;
@@ -47,6 +40,7 @@ public class Datadepot {
         return brukerCache.get(id);
     }
 
+    // Returnerer id til nylaget objekt 
     public int opprettStoppested(Stoppested stoppested){
         stoppestedCache.add(stoppested);
         return stoppestedCache.size()-1;
@@ -56,7 +50,7 @@ public class Datadepot {
         return stoppestedCache.get(id);
     }
 
-    // Returnerer id til nylagret objekt 
+    // Returnerer id til nylaget objekt 
     public int opprettRute(Rute rute){
         ruteCache.add(rute);
         return ruteCache.size()-1;

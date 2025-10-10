@@ -1,10 +1,10 @@
 package com.set10.application;
-import java.util.ArrayList;
+
 
 import com.set10.core.Datadepot;
 import com.set10.core.Navigasjonstjeneste;
-import com.set10.core.Rute;
 import com.set10.core.Stoppested;
+import com.set10.core.Rute;
 import com.set10.database.DatabaseText;
 
 import imgui.ImGui;
@@ -13,6 +13,7 @@ import imgui.app.Configuration;
 
 public class Main extends Application {
 
+    Navigasjonstjeneste navigasjonstjeneste;
     Datadepot datadepot;
 
     @Override
@@ -30,6 +31,13 @@ public class Main extends Application {
             ImGui.separator();
             for (Stoppested stoppested : datadepot.stoppestedCache) {
                 ImGui.text(stoppested.toString());   
+                ImGui.separator();
+            }
+        }
+        if(ImGui.collapsingHeader("Ruter")){
+            ImGui.separator();
+            for (Rute rute : datadepot.ruteCache) {
+                ImGui.text(rute.toString());   
                 ImGui.separator();
             }
         }
@@ -55,7 +63,12 @@ public class Main extends Application {
         // datadepot.opprettRute(rute);
         
         // datadepot.lagreTilDisk();
-        datadepot.lasteFraDisk();
+        try{
+            datadepot.lasteFraDisk();
+        }
+        catch(Exception e){
+            System.err.println("Kan ikke laste inn fra fil...");
+        }
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres

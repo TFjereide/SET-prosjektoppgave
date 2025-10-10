@@ -39,4 +39,8 @@ public class Rute {
         }
         System.out.println("Total lengde: " + beregnRuteLengde() + " km");
     }
+
+    public String toString(){
+        return "Rute: " + this.id;
+    }
 }

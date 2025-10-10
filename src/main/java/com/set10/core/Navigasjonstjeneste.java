@@ -1,8 +1,6 @@
 package com.set10.core;
-import java.util.ArrayList;
 
-
-/**
+/*
  * Denne klassen har en serie med metoder ment for å kunne utføre grunnleggende handlinger 
  * som har med navigasjon å gjøre. 
  */
@@ -18,5 +16,4 @@ public class Navigasjonstjeneste {
     
     // public reise FinnNærmesteStoppested(Posisjon posisjon){}
 
-    
 }
