@@ -2,8 +2,9 @@ package com.set10.application;
 import java.util.ArrayList;
 
 import com.set10.core.Datadepot;
+
 import com.set10.database.DatabaseText;
-import com.set10.database.Datadepot;
+
 
 import com.set10.core.Navigasjonstjeneste;
 import com.set10.core.Rute;
@@ -17,7 +18,7 @@ import imgui.app.Configuration;
 public class Main extends Application {
 
     Datadepot datadepot;
-    private Datadepot depot = new Datadepot();
+    private com.set10.database.Datadepot depot = new com.set10.database.Datadepot();
 
     @Override
     protected void configure(Configuration config) {

@@ -10,8 +10,8 @@ public class Rute {
         this.ruteID = ruteID;
     };
 
-    public Rute(int id, ArrayList<Stoppested> stopp) {
-        this.id = id;
+    public Rute(int ruteID, ArrayList<Stoppested> stopp) {
+        this.ruteID = ruteID;
         this.stopp = stopp;
     };
 
