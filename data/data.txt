@@ -1,0 +1,6 @@
+s;0;tilfeldig addresse
+s;1;tilfeldig addresse
+s;2;tilfeldig addresse
+s;3;tilfeldig addresse
+s;4;tilfeldig addresse
+r;0;0,1,2,3,4

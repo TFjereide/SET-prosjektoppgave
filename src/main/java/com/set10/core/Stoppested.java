@@ -1,24 +1,27 @@
 package com.set10.core;
 
-import java.time.LocalDateTime;
+import com.set10.core.Avgang;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Stoppested {
-    public int id;
-    public String adresse;
+    public int stoppID;
+    public String navn;
     ArrayList<Avgang> avganger = new ArrayList<>(); 
 
-    public Stoppested(int id, String adresse) {
-        this.id = id;
-        this.adresse = adresse;
+    public Stoppested(int stoppID, String navn) {
+        this.stoppID = stoppID;
+        this.navn = navn;
     }
 
-    public void leggTilAvgang(int ruteNr, LocalDateTime tidspunkt) {
-        avganger.add(new Avgang(ruteNr, tidspunkt));
+    public Avgang leggTilAvgang(int ruteID, LocalTime tidspunkt) {
+        Avgang a = new Avgang(ruteID, this, tidspunkt);
+        avganger.add(a);
+        return a;
     }
 
     public void visAvganger() {
-        System.out.println("Avganger fra " + adresse + ":");
+        System.out.println("Avganger fra " + navn + ":");
         for (Avgang a : avganger) {
             System.out.println("  " + a);
         }
@@ -26,10 +29,16 @@ public class Stoppested {
 
     @Override
     public String toString() {
-        return "StoppID: " + id + " Adresse: " + adresse + ".";
+        return "StoppID: " + stoppID + " Stoppested: " + navn + ".";
     }
 
+    public String hentNavn() {
+        return navn;
+    }
 
-
+public ArrayList<Avgang> hentAvganger() {
+    return avganger;
+}
     
 }
+

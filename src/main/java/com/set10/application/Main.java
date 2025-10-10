@@ -1,8 +1,16 @@
 package com.set10.application;
-import java.util.ArrayList;
+
+
+import com.set10.core.Datadepot;
+
+import com.set10.database.DatabaseText;
+
 
 import com.set10.core.Navigasjonstjeneste;
 import com.set10.core.Stoppested;
+import com.set10.core.Rute;
+import com.set10.core.Avgang;
+import com.set10.database.DatabaseText;
 
 import imgui.ImGui;
 import imgui.app.Application;
@@ -10,8 +18,9 @@ import imgui.app.Configuration;
 
 public class Main extends Application {
 
-    // Slettes senere. Ikke bruk denne noesteds
-    private ArrayList<Stoppested> testStoppesteder = new ArrayList<>();
+    Navigasjonstjeneste navigasjonstjeneste;
+    Datadepot datadepot;
+    private com.set10.database.Datadepot depot = new com.set10.database.Datadepot();
 
     @Override
     protected void configure(Configuration config) {
@@ -24,27 +33,61 @@ public class Main extends Application {
         ImGui.begin("Debug meny");
     
         // Kan lage enkle listefunksjoner Relativt enkelt
-        if(ImGui.collapsingHeader("Stoppesteder")){
+        // if(ImGui.collapsingHeader("Stoppesteder")){
+        //     ImGui.separator();
+        //     for (Stoppested stoppested : datadepot.stoppestedCache) {
+        //         ImGui.text(stoppested.toString());   
+        //         ImGui.separator();
+        //     }
+        // }
+        // Denne skal vise faktiske stoppesteder med avganger
+        if  (ImGui.collapsingHeader("Stoppesteder (med innhold)")){
             ImGui.separator();
-            for (Stoppested stoppested : testStoppesteder) {
-                ImGui.text(stoppested.toString());   
+            for (Stoppested stoppested : depot.hentStoppesteder()){
+                ImGui.text(stoppested.toString());
+
+                ImGui.indent();
+                for (Avgang a : stoppested.hentAvganger()){
+                    ImGui.text(a.toString());
+                }
+                ImGui.unindent();
                 ImGui.separator();
             }
         }
-        ImGui.end();
+        if(ImGui.collapsingHeader("Ruter")){
+            ImGui.separator();
+            for (Rute rute : datadepot.ruteCache) {
+                ImGui.text(rute.toString());   
+                ImGui.separator();
+            }
+        }
+        ImGui.end();    
 
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();
     }
 
+
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
     protected void preRun(){
         
-        for(int i = 0; i < 5; i+=1){
-            testStoppesteder.add(
-                new Stoppested(i, "tilfeldig addresse")
-            );
+        datadepot = new Datadepot(new DatabaseText());
+        
+        // for(int i = 0; i < 5; i+=1){
+        //     datadepot.opprettStoppested(
+        //         new Stoppested(i, "tilfeldig addresse")
+        //     );
+        // }
+        // Rute rute = new Rute(0, datadepot.stoppestedCache);
+        // datadepot.opprettRute(rute);
+        
+        // datadepot.lagreTilDisk();
+        try{
+            datadepot.lasteFraDisk();
+        }
+        catch(Exception e){
+            System.err.println("Kan ikke laste inn fra fil...");
         }
     }
     

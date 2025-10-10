@@ -1,18 +1,19 @@
 package com.set10.core;
-import java.util.ArrayList;
 
+/*
+ * Denne klassen har en serie med metoder ment for å kunne utføre grunnleggende handlinger 
+ * som har med navigasjon å gjøre. 
+ */
 public class Navigasjonstjeneste {
 
-    public ArrayList<Stoppested> stoppesteder = new ArrayList<>();
-    public ArrayList<Rute> ruter = new ArrayList<>();
+    public Datadepot dataDepot;
 
     public Navigasjonstjeneste(){
+    }
 
-    }
+    // Vil eventuelt ha slike metoder
+    // public Reise FinnReise(Stoppested A, Stoppested B){}
     
-    public void visStoppesteder() {
-        for (Stoppested s : stoppesteder) {
-            System.out.println(s);
-        }
-    }
+    // public reise FinnNærmesteStoppested(Posisjon posisjon){}
+
 }
