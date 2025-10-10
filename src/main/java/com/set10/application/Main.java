@@ -26,7 +26,6 @@ public class Main extends Application {
     }
 
     // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
-    // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
     @Override
     public void process() {
         ImGui.begin("Debug meny");
@@ -59,7 +58,6 @@ public class Main extends Application {
         // ImGui.showDemoWindow();
     }
 
-    // Dette er initialiseringskode, som kjøres før oppstart av programmet.
 
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
@@ -67,15 +65,16 @@ public class Main extends Application {
         
         datadepot = new Datadepot(new DatabaseText());
         
-        for(int i = 0; i < 5; i+=1){
-            datadepot.opprettStoppested(
-                new Stoppested(i, "tilfeldig addresse")
-            );
-        }
-        Rute rute = new Rute(0, datadepot.stoppestedCache);
-        datadepot.opprettRute(rute);
+        // for(int i = 0; i < 5; i+=1){
+        //     datadepot.opprettStoppested(
+        //         new Stoppested(i, "tilfeldig addresse")
+        //     );
+        // }
+        // Rute rute = new Rute(0, datadepot.stoppestedCache);
+        // datadepot.opprettRute(rute);
         
-        datadepot.lagreTilDisk();
+        // datadepot.lagreTilDisk();
+        datadepot.lasteFraDisk();
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres

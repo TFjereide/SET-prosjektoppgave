@@ -30,7 +30,12 @@ public class Datadepot {
     }
 
     public void lasteFraDisk(){
-        database.deserialiser(this);
+        try{
+            database.deserialiser(this);
+        }
+        catch(Exception e){
+            System.err.println("Kan ikke laste fra fil..");
+        }
     }
 
     public int opprettBruker(Bruker bruker){
