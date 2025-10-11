@@ -20,7 +20,6 @@ public class Main extends Application {
 
     Navigasjonstjeneste navigasjonstjeneste;
     Datadepot datadepot;
-    private com.set10.database.Datadepot depot = new com.set10.database.Datadepot();
 
     @Override
     protected void configure(Configuration config) {
@@ -43,7 +42,7 @@ public class Main extends Application {
         // Denne skal vise faktiske stoppesteder med avganger
         if  (ImGui.collapsingHeader("Stoppesteder (med innhold)")){
             ImGui.separator();
-            for (Stoppested stoppested : depot.hentStoppesteder()){
+            for (Stoppested stoppested : datadepot.hentStoppesteder()){
                 ImGui.text(stoppested.toString());
 
                 ImGui.indent();

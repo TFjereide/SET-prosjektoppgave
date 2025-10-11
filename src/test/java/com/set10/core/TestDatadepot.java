@@ -1,11 +1,20 @@
 package com.set10.core;
 
-import com.set10.database.Datadepot;
+import com.set10.core.Datadepot;
 import com.set10.core.Stoppested;
+import com.set10.database.DatabaseText;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class TestDatadepot {
-    public static void main(String[] args) {
-        Datadepot depot = new Datadepot(); 
+    
+    @Test
+    @DisplayName("Liten test av datadepot")
+    void testDataDepot() {
+        
+        Datadepot depot = new Datadepot(new DatabaseText()); 
 
         System.out.println("==== TEST AV DUMMYDATA ====");
         System.out.println("Antall brukere:      " + depot.hentBrukere().size());

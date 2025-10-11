@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.time.LocalTime;
 
 import com.set10.core.Bruker;
+import com.set10.core.IDatabase;
 import com.set10.core.Stoppested;
 import com.set10.core.Rute;
 import com.set10.core.Avgang;
@@ -12,10 +13,10 @@ import com.set10.core.Avgang;
  * Holder på data som applikasjonen behøver.
  * Opprettholder 
  */
-public class Datadepot {
+public class DepDatadepot {
 
     // Holder eventuelt på en database
-    // public IDatabase database;
+    public IDatabase database;
 
     public ArrayList<Bruker> brukerCache = new ArrayList<>();
     public ArrayList<Stoppested> stoppestedCache = new ArrayList<>();
@@ -25,7 +26,8 @@ public class Datadepot {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     // Burde fungere som Init
-    public Datadepot(){
+    public DepDatadepot(IDatabase database){
+        this.database = database;
         opprettDummydata();
     }
 
@@ -74,9 +76,6 @@ public class Datadepot {
         leggTilAvgangerForStopp(r34.hentRuteID(), 13, "05:52","06:52","07:52","08:52","09:52","10:52","11:52","12:52","13:52","14:52","15:52","16:52","17:52","19:52");
         leggTilAvgangerForStopp(r34.hentRuteID(), 14, "05:53","06:53","07:53","08:53","09:53","10:53","11:53","12:53","13:53","14:53","15:53","16:53","17:53","19:53");
     
-
-
-
     }
 
     private void leggTilAvgangerForStopp(int ruteID, int stoppID, String... tider) {
@@ -88,14 +87,15 @@ public class Datadepot {
             s.leggTilAvgang(ruteID, lt);
             Avgang a = s.leggTilAvgang(ruteID, lt); // legg på stoppested
             avgangCache.add(a); 
-    }
-}
-    public void lagreTilDisk(){
-        
+        }
     }
 
-    public void lasteFraDisk(){
+    public void lagreTilDisk() throws Exception{
+        database.serialiser(this);
+    }
 
+    public void lasteFraDisk() throws Exception{
+        database.deserialiser(this);
     }
 
     public void opprettBruker(Bruker b){
