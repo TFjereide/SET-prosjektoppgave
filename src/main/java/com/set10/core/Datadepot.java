@@ -104,6 +104,7 @@ public class Datadepot {
         return 
         brukerCache.get(id);
     }
+
     public ArrayList<Bruker> hentBrukere(){
         return brukerCache;
     }

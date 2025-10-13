@@ -31,14 +31,6 @@ public class Main extends Application {
     public void process() {
         ImGui.begin("Debug meny");
     
-        // Kan lage enkle listefunksjoner Relativt enkelt
-        // if(ImGui.collapsingHeader("Stoppesteder")){
-        //     ImGui.separator();
-        //     for (Stoppested stoppested : datadepot.stoppestedCache) {
-        //         ImGui.text(stoppested.toString());   
-        //         ImGui.separator();
-        //     }
-        // }
         // Denne skal vise faktiske stoppesteder med avganger
         if  (ImGui.collapsingHeader("Stoppesteder (med innhold)")){
             ImGui.separator();
@@ -72,14 +64,6 @@ public class Main extends Application {
     protected void preRun(){
         
         datadepot = new Datadepot(new DatabaseText());
-        
-        // for(int i = 0; i < 5; i+=1){
-        //     datadepot.opprettStoppested(
-        //         new Stoppested(i, "tilfeldig addresse")
-        //     );
-        // }
-        // Rute rute = new Rute(0, datadepot.stoppestedCache);
-        // datadepot.opprettRute(rute);
         
         // datadepot.lagreTilDisk();
         try{
