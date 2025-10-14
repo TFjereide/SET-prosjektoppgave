@@ -32,23 +32,27 @@ public class Main extends Application {
         ImGui.begin("Debug meny");
     
         // Denne skal vise faktiske stoppesteder med avganger
-        if  (ImGui.collapsingHeader("Stoppesteder (med innhold)")){
+        if(ImGui.collapsingHeader("Stoppesteder")){
             ImGui.separator();
             for (Stoppested stoppested : datadepot.hentStoppesteder()){
-                ImGui.text(stoppested.toString());
-
-                ImGui.indent();
-                for (Avgang a : stoppested.hentAvganger()){
-                    ImGui.text(a.toString());
+                if(ImGui.treeNode(stoppested.toString())){
+                    for (Avgang a : stoppested.hentAvganger()){
+                        ImGui.text(a.toString());
+                    }
+                    ImGui.treePop();
                 }
-                ImGui.unindent();
                 ImGui.separator();
             }
         }
         if(ImGui.collapsingHeader("Ruter")){
             ImGui.separator();
             for (Rute rute : datadepot.ruteCache) {
-                ImGui.text(rute.toString());   
+                if(ImGui.treeNode(rute.toString())){
+                    for (Stoppested stopp : rute.stopp){
+                        ImGui.text(stopp.toString());
+                    }
+                    ImGui.treePop();
+                }   
                 ImGui.separator();
             }
         }
@@ -58,20 +62,22 @@ public class Main extends Application {
         // ImGui.showDemoWindow();
     }
 
-
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
     protected void preRun(){
         
         datadepot = new Datadepot(new DatabaseText());
+        datadepot.opprettDummydata();
         
-        // datadepot.lagreTilDisk();
-        try{
-            datadepot.lasteFraDisk();
-        }
+        try{datadepot.lagreTilDisk();}
         catch(Exception e){
-            System.err.println("Kan ikke laste inn fra fil...");
+            System.err.println("[ERROR] Kan ikke lagre til fil ->" + e);
         }
+
+        // try{datadepot.lasteFraDisk();}
+        // catch(Exception e){
+        //     System.err.println("[ERROR] Kan ikke laste inn fra fil ->" + e);
+        // }
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres

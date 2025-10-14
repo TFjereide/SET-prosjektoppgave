@@ -3,15 +3,18 @@ package com.set10.core;
 import java.util.ArrayList;
 
 public class Rute {
-    public int ruteID;
+    public int id;
     public ArrayList<Stoppested> stopp = new ArrayList<>();
 
-    public Rute(int ruteID) {
-        this.ruteID = ruteID;
+    public Rute() {
     };
 
-    public Rute(int ruteID, ArrayList<Stoppested> stopp) {
-        this.ruteID = ruteID;
+    public Rute(ArrayList<Stoppested> stopp) {
+        this.stopp = stopp;
+    };
+
+    public Rute(int id, ArrayList<Stoppested> stopp) {
+        this.id = id;
         this.stopp = stopp;
     };
 
@@ -19,6 +22,7 @@ public class Rute {
         stopp.add(stoppested);
     }
 
+    // Denne gjør ingenting for øyeblikket
     public double beregnRuteLengde() {
         int antallStopp  = stopp.size();
         double totalAvstand = 0;
@@ -40,12 +44,7 @@ public class Rute {
         System.out.println("Total lengde: " + beregnRuteLengde() + " km");
     }
 
-    public int hentRuteID() {
-        return ruteID;
-  }
-
-
     public String toString(){
-        return "Rute: " + this.ruteID;
+        return "Rute: " + this.id;
     }
 }
