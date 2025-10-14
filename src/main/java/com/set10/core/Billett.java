@@ -4,28 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-public class Billett {
-    public String type;      //enkel, periode osv.
+public class Billett {  
+
+    public enum Type{
+        Enkel,
+        Periode
+    }
+
+    public int id;
+    public Type type;
+    
     public LocalDateTime startTid;
     public LocalDateTime sluttTid;
     public List<Integer> gyldigForSoner;
 
 
-    public Billett(String type, LocalDateTime startTid) {
-        this.type = type.toLowerCase();
+    public Billett(Type type, LocalDateTime startTid) {
+        this.type = type;
         this.startTid = startTid;
         this.gyldigForSoner = new ArrayList<>(); // Lager bare listen, en annen metode for å legge til soner.
 
-        if (this.type.equals("enkel")) {
-
-            this.sluttTid = startTid.plusMinutes(90);
-        } else if (this.type.equals("periode")) {
-
-            this.sluttTid = startTid.plusDays(30);
-        } else {
-
-            this.sluttTid = startTid;
+        switch(type){
+            case Enkel:
+                this.sluttTid = startTid.plusMinutes(90);
+                break;
+            case Periode:
+                this.sluttTid = startTid.plusDays(30);
+                break;
+            default:
+                this.sluttTid = startTid;
         }
+
     }
 
     public void leggTilSone(int sone) {

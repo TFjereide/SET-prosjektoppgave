@@ -6,26 +6,30 @@ import java.util.ArrayList;
 
 public class Stoppested {
     public int id;
-    public String adresse;
-    public ArrayList<Avgang> avganger = new ArrayList<>();
+    public String navn;
+    public ArrayList<Avgang> avganger = new ArrayList<>(); 
     public int sone;
 
-    public Stoppested(int id, String adresse, int sone) {
+    public Stoppested(String navn) {
+        this.navn = navn;
+    }
+
+    public Stoppested(int stoppID, String navn) {
         this.id = id;
-        this.adresse = adresse;
+        this.navn = navn;
+    }
+
+    public Stoppested(String navn, int sone) {
+        this.navn = navn;
         this.sone = sone;
     }
 
-    public void leggTilAvgang(int ruteNr, LocalTime tidspunkt) {
-        avganger.add(new Avgang(ruteNr, this, tidspunkt));
-    }
-
-    public ArrayList<Avgang> hentAvganger() {
-        return avganger;
+    public void leggTilAvgang(Avgang avgang) {
+        avganger.add(avgang);
     }
 
     public void visAvganger() {
-        System.out.println("Avganger fra " + adresse + ":");
+        System.out.println("Avganger fra " + navn + ":");
         for (Avgang a : avganger) {
             System.out.println("  " + a);
         }
@@ -37,10 +41,13 @@ public class Stoppested {
 
     @Override
     public String toString() {
-        return "StoppID: " + id + " Stoppested: " + adresse + ".";
+        return "StoppID: " + id + " Stoppested: " + navn + ".";
     }
 
 
 
+    public ArrayList<Avgang> hentAvganger() {
+        return avganger;
+    }
     
 }

@@ -4,13 +4,21 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Avgang {
-    int ruteID;
-    Stoppested stoppested;
-    LocalTime tidspunkt;
+    public int id;
+    public int ruteID;
+    public int stoppestedID;
+    public LocalTime tidspunkt;
 
-    public Avgang(int ruteID, Stoppested stoppested, LocalTime tidspunkt) {
+    public Avgang(int id, int ruteID, int stoppested, LocalTime tidspunkt) {
+        this.id = id;
         this.ruteID = ruteID;
-        this.stoppested = stoppested;
+        this.stoppestedID = stoppested;
+        this.tidspunkt = tidspunkt;
+    }
+
+    public Avgang(int ruteID, int stoppested, LocalTime tidspunkt) {
+        this.ruteID = ruteID;
+        this.stoppestedID = stoppested;
         this.tidspunkt = tidspunkt;
     }
 

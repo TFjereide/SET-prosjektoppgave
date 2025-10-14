@@ -2,24 +2,28 @@ package com.set10.core;
 
 import java.util.ArrayList;
 public class Bruker {
-    public int brukerId;
+    public int id;
     public String navn;
     public ArrayList<Billett> aktiveBilletter;
     public ArrayList<Billett> gamleBiletter;
 
-    private static int nesteLedigId = 1;
 
-    public Bruker(String navn){
-        this.brukerId = nesteLedigId++;
+    public Bruker(int id, String navn){
+        this.id = id;
         this.navn = navn;
         this.aktiveBilletter = new ArrayList<>();
         this.gamleBiletter = new ArrayList<>();
+    }
 
+    public Bruker(String navn){
+        this.navn = navn;
+        this.aktiveBilletter = new ArrayList<>();
+        this.gamleBiletter = new ArrayList<>();
     }
 
     @Override
     public String toString(){
-         return "BrukerId: " + brukerId + " Navn: " + navn;
+         return "BrukerId: " + id + " Navn: " + navn;
 
     }
 }
