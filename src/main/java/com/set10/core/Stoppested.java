@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Stoppested {
     public int id;
     public String adresse;
-    ArrayList<Avgang> avganger = new ArrayList<>();
+    public ArrayList<Avgang> avganger = new ArrayList<>();
     public int sone;
 
     public Stoppested(int id, String adresse, int sone) {
@@ -18,6 +18,10 @@ public class Stoppested {
 
     public void leggTilAvgang(int ruteNr, LocalTime tidspunkt) {
         avganger.add(new Avgang(ruteNr, this, tidspunkt));
+    }
+
+    public ArrayList<Avgang> hentAvganger() {
+        return avganger;
     }
 
     public void visAvganger() {
