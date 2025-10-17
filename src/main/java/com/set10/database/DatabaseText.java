@@ -20,11 +20,23 @@ import com.set10.core.Datadepot;
 
 
 /* 
- * Dataformat skamløst stjålet fra .obj 
- * 
+ * Dataformat skamløst stjålet fra .obj:
+ * a: avgang
+ * s: stoppested
+ * i: billett
+ * b: bruker
+ * r: rute
 */
+
 public class DatabaseText implements IDatabase{
-    final String path = "data\\data.txt";
+    String path = "data\\data.txt";
+
+    public DatabaseText(){
+    }
+
+    public DatabaseText(String path){
+        this.path = path;
+    }
 
     public void serialiser(Datadepot datadepot) throws Exception{
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
@@ -41,7 +53,8 @@ public class DatabaseText implements IDatabase{
             for(int j = 0; j < stopp.avganger.size()-1; j++){
                 avganger += stopp.avganger.get(j).id +",";
             }
-            avganger += stopp.avganger.get(stopp.avganger.size()-1).id;
+            avganger += stopp.avganger.getLast().id;
+
             writer.append("s;" + stopp.id + ";"+ stopp.navn + ";" + avganger + "\n");
         }
 
@@ -52,7 +65,7 @@ public class DatabaseText implements IDatabase{
                 for(int j = 0; j < rute.stopp.size()-1; j++){
                     stopp += rute.stopp.get(j).id +",";
                 }
-                stopp += rute.stopp.get(rute.stopp.size()-1).id;
+                stopp += rute.stopp.getLast().id;
             }else{
                 System.err.println(rute +" har ingen stopp!");
             }
@@ -66,7 +79,22 @@ public class DatabaseText implements IDatabase{
 
         for(int i = 0; i < datadepot.brukerCache.size(); i++){
             Bruker bruker = datadepot.brukerCache.get(i);
-            writer.append("b;" + bruker.id + ";" + bruker.navn+";" + "\n");
+            String aktiveb = "";
+            if (!bruker.aktiveBilletter.isEmpty()){
+                for(int j = 0; j < bruker.aktiveBilletter.size()-1; j++){
+                    aktiveb += bruker.aktiveBilletter.get(j).id +",";
+                }
+                aktiveb += bruker.aktiveBilletter.getLast().id;
+            }
+
+            String gamleb = "";
+            if(!bruker.gamleBiletter.isEmpty()){
+                for(int j = 0; j < bruker.gamleBiletter.size()-1; j++){
+                    gamleb += bruker.gamleBiletter.get(j).id +",";
+                }
+                gamleb += bruker.gamleBiletter.getLast().id;
+            }
+            writer.append("b;" + bruker.id + ";" + bruker.navn+";"+aktiveb + ";" + gamleb + "\n");
         }
 
         
@@ -76,8 +104,11 @@ public class DatabaseText implements IDatabase{
     public void deserialiser(Datadepot datadepot) throws Exception{
         BufferedReader reader = new BufferedReader(new FileReader(path));
 
+        datadepot.brukerCache = new ArrayList<>();
+        datadepot.billettCache = new ArrayList<>();
         datadepot.stoppestedCache = new ArrayList<>();
         datadepot.ruteCache = new ArrayList<>();
+        datadepot.avgangCache = new ArrayList<>();
 
         String line;
         while ((line = reader.readLine()) != null){
@@ -109,12 +140,15 @@ public class DatabaseText implements IDatabase{
             }else if(line.startsWith("r;")){
                 String[] bits = line.split(";");
 
-                String[] stoppidxs = bits[2].split(",");
                 ArrayList<Stoppested> stopp = new ArrayList<>();
-                for(String string : stoppidxs){
-                    int idx = Integer.parseInt(string);
-                    stopp.add(datadepot.stoppestedCache.get(idx));
+                if(bits.length > 2){
+                    String[] stoppidxs = bits[2].split(",");
+                    for(String string : stoppidxs){
+                        int idx = Integer.parseInt(string);
+                        stopp.add(datadepot.stoppestedCache.get(idx));
+                    }
                 }
+
 
                 datadepot.ruteCache.add(
                     new Rute(Integer.parseInt(bits[1]),stopp)
@@ -128,6 +162,21 @@ public class DatabaseText implements IDatabase{
             }else if(line.startsWith("b;")){
                 String[] bits = line.split(";");
                 Bruker bruker = new Bruker(Integer.parseInt(bits[1]),bits[2]);
+
+                if(bits.length > 3){
+                    String[] aktiveBilletterStr = bits[3].split(",");
+                    for(String strId : aktiveBilletterStr){
+                        Billett billett = datadepot.billettCache.get(Integer.parseInt(strId));
+                        bruker.aktiveBilletter.add(billett);
+                    }
+
+                    String[] gamleBilletterStr = bits[4].split(",");
+                    for(String strId : gamleBilletterStr){
+                        Billett billett = datadepot.billettCache.get(Integer.parseInt(strId));
+                        bruker.gamleBiletter.add(billett);
+                    }
+                }
+
 
                 datadepot.brukerCache.add(bruker);
             }

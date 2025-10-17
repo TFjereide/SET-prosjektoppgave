@@ -12,8 +12,8 @@ public class Datadepot {
 
     public IDatabase database;
 
-    public ArrayList<Bruker> brukerCache = new ArrayList<>(); // ikke lagret for øyeblikket
-    public ArrayList<Billett> billettCache = new ArrayList<>(); // ikke lagret for øyeblikket
+    public ArrayList<Bruker> brukerCache = new ArrayList<>(); 
+    public ArrayList<Billett> billettCache = new ArrayList<>(); 
 
     public ArrayList<Stoppested> stoppestedCache = new ArrayList<>();
     public ArrayList<Rute> ruteCache = new ArrayList<>();
