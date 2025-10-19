@@ -8,12 +8,13 @@ public class Rute {
     public int id;
     public ArrayList<Stoppested> stopp = new ArrayList<>();
 
-    public Rute() {
+    public Rute(int id) {
+        this.id = id;
     };
 
-    public Rute(ArrayList<Stoppested> stopp) {
+    /*public Rute(ArrayList<Stoppested> stopp) {
         this.stopp = stopp;
-    };
+    };*/
 
     public Rute(int id, ArrayList<Stoppested> stopp) {
         this.id = id;
