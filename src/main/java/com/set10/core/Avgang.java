@@ -27,4 +27,5 @@ public class Avgang {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return "(Rute " + ruteID + ") - Avgang: " + tidspunkt.format(formatter);
     }
+
 }

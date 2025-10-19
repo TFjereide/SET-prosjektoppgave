@@ -36,9 +36,17 @@ public class Main extends Application {
             ImGui.separator();
             for (Stoppested stoppested : datadepot.hentStoppesteder()){
                 if(ImGui.treeNode(stoppested.toString())){
-                    for (Avgang a : stoppested.hentAvganger()){
-                        ImGui.text(a.toString());
+                    for (Rute rute : datadepot.hentRuter()){
+                        if(ImGui.treeNode(rute.toString())){
+                            for (Avgang a : stoppested.hentAvganger()) {
+                                if (a.ruteID == rute.id) {
+                                    ImGui.text(a.toString());
+                         }
+                            }
+                        ImGui.treePop();
+                        }
                     }
+        
                     ImGui.treePop();
                 }
                 ImGui.separator();
@@ -65,6 +73,7 @@ public class Main extends Application {
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
     protected void preRun(){
+
         
         datadepot = new Datadepot(new DatabaseText());
         datadepot.opprettDummydata();
