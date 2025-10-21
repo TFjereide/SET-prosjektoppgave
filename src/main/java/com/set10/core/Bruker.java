@@ -26,4 +26,7 @@ public class Bruker {
          return "BrukerId: " + id + " Navn: " + navn;
 
     }
+    public String hentVisningsnavn() {
+    return navn;
+}
 }

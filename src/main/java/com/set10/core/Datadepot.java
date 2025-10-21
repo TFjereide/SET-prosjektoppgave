@@ -29,6 +29,7 @@ public class Datadepot {
     public void opprettDummydata(){
 
         //Brukere
+        opprettBruker(new Bruker("Administrator"));
         opprettBruker(new Bruker("Jonas Olsen"));
         opprettBruker(new Bruker("Issac Evinskog"));
         opprettBruker(new Bruker("Erika Hansen"));
