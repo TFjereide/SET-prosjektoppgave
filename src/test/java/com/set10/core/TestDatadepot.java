@@ -1,41 +1,18 @@
 package com.set10.core;
 
-import com.set10.core.Datadepot;
-import com.set10.core.Stoppested;
+// import com.set10.core.Datadepot;
+// import com.set10.core.Stoppested;
 import com.set10.database.DatabaseText;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Assertions;
+// import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestDatadepot {
     
-    @Test
-    @DisplayName("Liten test av datadepot")
-    void testDataDepot() {
-        
-        Datadepot depot = new Datadepot(new DatabaseText()); 
-
-        System.out.println("==== TEST AV DUMMYDATA ====");
-        System.out.println("Antall brukere:      " + depot.hentBrukere().size());
-        System.out.println("Antall stoppesteder: " + depot.hentStoppesteder().size());
-        System.out.println("Antall avganger:     " + depot.hentAvganger().size());
-        System.out.println("Antall ruter:        " + depot.hentRuter().size());
-
-    
-        // burde omformes nå
-        // Stoppested s = depot.hentStoppested(1);
-        // if (s != null) {
-        //     System.out.println("\nAvganger fra " + s.navn + ":");
-        //     s.visAvganger();
-        // } else {
-        //     System.out.println("Fant ikke stoppested med ID 1!");
-        // }
-    }
-
     @Test
     @DisplayName("testSerialiseringOgDeserialisering")
     void testSerialiseringOgDeserialisering(){
@@ -46,18 +23,14 @@ public class TestDatadepot {
         assertDoesNotThrow(depot::lasteFraDisk);
     }
 
-
-    // Denne burde splittes inn i individuelle deler; for brukere, billetter, ruter etc.
-    // Og de burde teste for mer enn id-er, selvsagt
     @Test
-    @DisplayName("Serialiseringsintegritet")
-    void testSerialiseringsintegritet(){
+    @DisplayName("serialiseringsintegritet for brukere")
+    void testBrukerSerialiseringsintegritet(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
         Datadepot depot = new Datadepot(dbt); 
         Datadepot depot2 = new Datadepot(dbt); 
 
         depot.opprettDummydata();
-        depot2.opprettDummydata();
 
         try {depot.lagreTilDisk();}
         catch(Exception e){
@@ -70,34 +43,120 @@ public class TestDatadepot {
         }
 
         assertEquals(depot.brukerCache.size(), depot2.brukerCache.size());
-        assertEquals(depot.billettCache.size(), depot2.billettCache.size());
-        assertEquals(depot.stoppestedCache.size(), depot2.stoppestedCache.size());
-        assertEquals(depot.ruteCache.size(), depot2.ruteCache.size());
-        assertEquals(depot.avgangCache.size(), depot2.avgangCache.size());
 
         for(int i = 0; i< depot.brukerCache.size(); i++){
             Bruker b1 = depot.brukerCache.get(i);
             Bruker b2 = depot2.brukerCache.get(i);
             assertEquals(b1.id, b2.id);
         }
+    }
 
+    @Test
+    @DisplayName("serialiseringsintegritet for Billetter")
+    void testBillettSerialiseringsintegritet(){
+        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        Datadepot depot = new Datadepot(dbt); 
+        Datadepot depot2 = new Datadepot(dbt); 
+
+        depot.opprettDummydata();
+
+        try {depot.lagreTilDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        try {depot2.lasteFraDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        assertEquals(depot.billettCache.size(), depot2.billettCache.size());
+        
         for(int i = 0; i< depot.billettCache.size(); i++){
             Billett b1 = depot.billettCache.get(i);
             Billett b2 = depot2.billettCache.get(i);
             assertEquals(b1.id, b2.id);
         }
+    }
 
-        for(int i = 0; i< depot.stoppestedCache.size(); i++){
+    @Test
+    @DisplayName("serialiseringsintegritet for stoppested")
+    void testStoppestedSerialiseringsintegritet(){
+        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        Datadepot depot = new Datadepot(dbt); 
+        Datadepot depot2 = new Datadepot(dbt); 
+
+        depot.opprettDummydata();
+
+        try {depot.lagreTilDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        try {depot2.lasteFraDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        assertEquals(depot.stoppestedCache.size(), depot2.stoppestedCache.size());
+
+        for(int i = 0; i < depot.stoppestedCache.size(); i++){
             Stoppested b1 = depot.stoppestedCache.get(i);
             Stoppested b2 = depot2.stoppestedCache.get(i);
             assertEquals(b1.id, b2.id);
         }
 
+    }
+
+    
+    
+    @Test
+    @DisplayName("serialiseringsintegritet for stoppested")
+    void testRuterSerialiseringsintegritet(){
+        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        Datadepot depot = new Datadepot(dbt); 
+        Datadepot depot2 = new Datadepot(dbt); 
+
+        depot.opprettDummydata();
+
+        try {depot.lagreTilDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        try {depot2.lasteFraDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        assertEquals(depot.ruteCache.size(), depot2.ruteCache.size());
         for(int i = 0; i< depot.ruteCache.size(); i++){
             Rute b1 = depot.ruteCache.get(i);
             Rute b2 = depot2.ruteCache.get(i);
             assertEquals(b1.id, b2.id);
         }
+    }
+    
+    @Test
+    @DisplayName("serialiseringsintegritet for avganger")
+    void testAvgangSerialiseringsintegritet(){
+        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        Datadepot depot = new Datadepot(dbt); 
+        Datadepot depot2 = new Datadepot(dbt); 
+
+        depot.opprettDummydata();
+
+        try {depot.lagreTilDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        try {depot2.lasteFraDisk();}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        assertEquals(depot.avgangCache.size(), depot2.avgangCache.size());
 
         for(int i = 0; i< depot.avgangCache.size(); i++){
             Avgang b1 = depot.avgangCache.get(i);
@@ -106,4 +165,6 @@ public class TestDatadepot {
         }
 
     }
+    
+    
 }

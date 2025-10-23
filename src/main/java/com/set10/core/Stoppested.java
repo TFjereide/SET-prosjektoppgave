@@ -14,7 +14,7 @@ public class Stoppested {
         this.navn = navn;
     }
 
-    public Stoppested(int stoppID, String navn) {
+    public Stoppested(int id, String navn) {
         this.id = id;
         this.navn = navn;
     }
