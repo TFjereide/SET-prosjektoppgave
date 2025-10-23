@@ -12,10 +12,6 @@ public class Rute {
         this.id = id;
     };
 
-    /*public Rute(ArrayList<Stoppested> stopp) {
-        this.stopp = stopp;
-    };*/
-
     public Rute(int id, ArrayList<Stoppested> stopp) {
         this.id = id;
         this.stopp = stopp;

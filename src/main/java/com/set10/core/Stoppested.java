@@ -1,7 +1,4 @@
 package com.set10.core;
-import com.set10.core.Avgang;
-
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Stoppested {
@@ -44,10 +41,7 @@ public class Stoppested {
         return "StoppID: " + id + " Stoppested: " + navn + ".";
     }
 
-
-
     public ArrayList<Avgang> hentAvganger() {
         return avganger;
     }
-    
 }
