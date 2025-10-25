@@ -22,13 +22,13 @@ public class Bruker {
         this.gamleBilletter = new ArrayList<>();
     }
 
-    public void kjopBillett(String type, LocalDateTime startTid) {
+    public void kjopBillett(Billett.Type type, LocalDateTime startTid) {
         Billett nyBillett = new Billett(type, startTid);
         aktiveBilletter.add(nyBillett);
         System.out.println(navn + " kjøpte en " + type + " billett.");
     }
 
-    public void kjopBillettTilAnnenBruker(String type, LocalDateTime startTid, Bruker mottaker) {
+    public void kjopBillettTilAnnenBruker(Billett.Type type, LocalDateTime startTid, Bruker mottaker) {
         Billett nyBillett = new Billett(type, startTid);
         mottaker.aktiveBilletter.add(nyBillett);
         System.out.println(navn + " kjøpte " + type + " billett til " + mottaker.navn);
