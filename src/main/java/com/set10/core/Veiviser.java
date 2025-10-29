@@ -2,6 +2,12 @@ package com.set10.core;
 
 import java.util.ArrayList;
 
+
+/** 
+ * Klasse som inneholder metoder for å beregne reiser
+ * Forhåpentligvis trenger den ikke å ha noen form for lokal data,
+ * men heller være en form for statisk klasse, med statiske metoder/funksjoner
+*/
 public class Veiviser {
 
     public class Kant{
@@ -16,6 +22,7 @@ public class Veiviser {
     }
 
     public class Node {
+        public int id = -1;
         public Stoppested sted;
         public ArrayList<Kant> kanter;
     }

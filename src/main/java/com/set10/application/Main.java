@@ -2,11 +2,8 @@
 
 package com.set10.application;
 
-
 import com.set10.core.Datadepot;
-
 import com.set10.database.DatabaseText;
-
 
 import com.set10.core.Navigasjonstjeneste;
 import com.set10.core.Stoppested;
@@ -36,6 +33,25 @@ public class Main extends Application {
     @Override
     public void process() {
         ImGui.begin("Debug meny");
+        
+        if(ImGui.button("lagre til disk")){
+            try{datadepot.lagreTilDisk();}
+            catch(Exception e){
+                System.err.println("[ERROR] Kan ikke lagre til fil ->" + e);
+            }
+        }
+        ImGui.sameLine();
+        if(ImGui.button("laste fra disk")){
+            try{datadepot.lasteFraDisk();}
+            catch(Exception e){
+                System.err.println("[ERROR] Kan ikke laste inn fra fil ->" + e);
+            }
+        }
+        ImGui.sameLine();
+        if(ImGui.button("opprett dummydata")){
+            datadepot.opprettDummydata();
+        }
+
         ImGui.setNextItemWidth(220);
         // Velger bruker
         if (ImGui.beginCombo("##brukerCombo" , valgtBrukerNavn == null ? "Velg bruker" : valgtBrukerNavn)) {
@@ -125,17 +141,14 @@ public class Main extends Application {
 
         
         datadepot = new Datadepot(new DatabaseText());
-        datadepot.opprettDummydata();
+        
         
         // try{datadepot.lagreTilDisk();}
         // catch(Exception e){
         //     System.err.println("[ERROR] Kan ikke lagre til fil ->" + e);
         // }
 
-        try{datadepot.lasteFraDisk();}
-        catch(Exception e){
-            System.err.println("[ERROR] Kan ikke laste inn fra fil ->" + e);
-        }
+       
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres
