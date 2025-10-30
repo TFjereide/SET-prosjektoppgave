@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class NavigasjonsTjenesteTester {
+public class TestNavigationService {
 
     // @Test
     // @DisplayName("can create and link navigation data")

@@ -2,15 +2,15 @@
 
 package com.set10.application;
 
-import com.set10.core.Datadepot;
+import com.set10.core.DataRepository;
 import com.set10.database.DatabaseText;
 
-import com.set10.core.Navigasjonstjeneste;
-import com.set10.core.Stoppested;
-import com.set10.core.Rute;
-import com.set10.core.Avgang;
-import com.set10.core.Billett;
-import com.set10.core.Bruker;
+import com.set10.core.NavigationService;
+import com.set10.core.Stop;
+import com.set10.core.Route;
+import com.set10.core.Departure;
+import com.set10.core.Ticket;
+import com.set10.core.User;
 import com.set10.database.DatabaseText;
 
 import imgui.ImGui;
@@ -19,10 +19,10 @@ import imgui.app.Configuration;
 
 public class Main extends Application {
 
-    Navigasjonstjeneste navigasjonstjeneste;
-    Datadepot datadepot;
-    private Integer valgtBrukerId = null;
-    private String valgtBrukerNavn = null;
+    NavigationService navigationservice;
+    DataRepository datadepot;
+    private Integer chosenUserID = null;
+    private String chosenUserName = null;
 
     @Override
     protected void configure(Configuration config) {
@@ -32,38 +32,38 @@ public class Main extends Application {
     // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
     @Override
     public void process() {
-        ImGui.begin("Debug meny");
+        ImGui.begin("Debug menu");
         
-        if(ImGui.button("lagre til disk")){
-            try{datadepot.lagreTilDisk();}
+        if(ImGui.button("save Data")){
+            try{datadepot.saveToDisk();}
             catch(Exception e){
-                System.err.println("[ERROR] Kan ikke lagre til fil ->" + e);
+                System.err.println("[ERROR] Can't save to disk ->" + e);
             }
         }
         ImGui.sameLine();
-        if(ImGui.button("laste fra disk")){
-            try{datadepot.lasteFraDisk();}
+        if(ImGui.button("Load Data")){
+            try{datadepot.loadFromDisk();}
             catch(Exception e){
-                System.err.println("[ERROR] Kan ikke laste inn fra fil ->" + e);
+                System.err.println("[ERROR] Can't load from disk ->" + e);
             }
         }
         ImGui.sameLine();
-        if(ImGui.button("opprett dummydata")){
-            datadepot.opprettDummydata();
+        if(ImGui.button("generate dummydata")){
+            datadepot.generateDummyData();
         }
 
         ImGui.setNextItemWidth(220);
         // Velger bruker
-        if (ImGui.beginCombo("##brukerCombo" , valgtBrukerNavn == null ? "Velg bruker" : valgtBrukerNavn)) {
+        if (ImGui.beginCombo("##userCombo" , chosenUserName == null ? "Choose User" : chosenUserName)) {
 
-            for (Bruker b : datadepot.hentBrukere()) {
+            for (User user : datadepot.getUsers()) {
         
-                String navn = b.hentVisningsnavn();  
-                boolean selected = (valgtBrukerId != null && valgtBrukerId == b.id);
+                String name = user.getDisplayName();  
+                boolean selected = (chosenUserID != null && chosenUserID == user.id);
 
-                if (ImGui.selectable(navn, selected)) {
-                    valgtBrukerId = b.id;
-                    valgtBrukerNavn = navn;
+                if (ImGui.selectable(name, selected)) {
+                    chosenUserID = user.id;
+                    chosenUserName = name;
                 }
 
                 if (selected)
@@ -75,61 +75,57 @@ public class Main extends Application {
         ImGui.sameLine();
 
 
-        if (valgtBrukerId != null) {
-            ImGui.text("Logget inn som: " + valgtBrukerNavn);
+        if (chosenUserID != null) {
+            ImGui.text("Logged in as: " + chosenUserName);
             ImGui.separator();
 
 
-        // Ruter
-        ImGui.spacing();
-        ImGui.spacing();
-        ImGui.spacing();
-        ImGui.spacing();
-        if (ImGui.collapsingHeader("Ruter")) {
- 
-            ImGui.separator();
-            for (Rute rute : datadepot.hentRuter()) {
-                if (ImGui.treeNode(rute.toString())) {
-                    for (Stoppested stopp : rute.stopp) {
-                        ImGui.text(stopp.toString());
-                    }
-                    ImGui.treePop();
-                }
+            // Ruter
+            ImGui.spacing();
+            ImGui.spacing();
+            ImGui.spacing();
+            ImGui.spacing();
+            if (ImGui.collapsingHeader("Routes")) {
+    
                 ImGui.separator();
-            }
-        }
-
-        // Stoppesteder
-        if (ImGui.collapsingHeader("Stoppesteder")) {
-            ImGui.separator();
-            for (Stoppested stoppested : datadepot.hentStoppesteder()) {
-                if (ImGui.treeNode(stoppested.toString())) {
-                    for (Rute rute : datadepot.hentRuter()) {
-                        if (ImGui.treeNode(rute.toString())) {
-                            for (Avgang a : stoppested.hentAvganger()) {
-                                if (a.ruteID == rute.id) {
-                                    ImGui.text(a.toString());
-                                }
-                            }
-                            ImGui.treePop();
+                for (Route route : datadepot.hentRuter()) {
+                    if (ImGui.treeNode(route.toString())) {
+                        for (Stop stopp : route.stops) {
+                            ImGui.text(stopp.toString());
                         }
+                        ImGui.treePop();
                     }
-                    ImGui.treePop();
+                    ImGui.separator();
                 }
+            }
+
+            // Stoppesteder
+            if (ImGui.collapsingHeader("Stops")) {
+                ImGui.separator();
+                for (Stop stop : datadepot.hentStoppesteder()) {
+                    if (ImGui.treeNode(stop.toString())) {
+                        for (Route route : datadepot.hentRuter()) {
+                            if (ImGui.treeNode(route.toString())) {
+                                for (Departure departure : stop.hentAvganger()) {
+                                    if (departure.routeID == route.id) {
+                                        ImGui.text(departure.toString());
+                                    }
+                                }
+                                ImGui.treePop();
+                            }
+                        }
+                        ImGui.treePop();
+                    }
+                    ImGui.separator();
+                }
+            }
+            // Billetter
+            if (ImGui.collapsingHeader("Billetter")) {
                 ImGui.separator();
             }
-        }
-        // Billetter
-        if (ImGui.collapsingHeader("Billetter")) {
-            ImGui.separator();
-            
-        }
-
         }
 
         ImGui.end();
-
-   
 
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();
@@ -138,17 +134,7 @@ public class Main extends Application {
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
     protected void preRun(){
-
-        
-        datadepot = new Datadepot(new DatabaseText());
-        
-        
-        // try{datadepot.lagreTilDisk();}
-        // catch(Exception e){
-        //     System.err.println("[ERROR] Kan ikke lagre til fil ->" + e);
-        // }
-
-       
+        datadepot = new DataRepository(new DatabaseText());
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres

@@ -4,17 +4,17 @@ package com.set10.core;
  * Denne klassen er en form for API ment for å kunne utføre grunnleggende handlinger 
  * som har med navigasjon å gjøre. I.E. finne reiser, og lignende.
  */
-public class Navigasjonstjeneste {
+public class NavigationService {
 
-    public Datadepot dataDepot;
+    public DataRepository dataRepository;
 
-    public Navigasjonstjeneste(Datadepot dataDepot){
-        this.dataDepot = dataDepot;
+    public NavigationService(DataRepository dataRepository){
+        this.dataRepository = dataRepository;
     }
     // Vil eventuelt ha slike metoder
-    public Reise FinnReise(Stoppested A, Stoppested B){
-        Reise reise  = Veiviser.beregnReise(A, B);
-        return reise;
+    public Trip FindRoute(Stop A, Stop B){
+        Trip trip  = PathFinder.calculatePath(A, B);
+        return trip;
     }
     
     // public reise FinnNærmesteStoppested(Posisjon posisjon){}

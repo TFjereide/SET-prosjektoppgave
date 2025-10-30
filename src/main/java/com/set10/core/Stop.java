@@ -1,33 +1,33 @@
 package com.set10.core;
 import java.util.ArrayList;
 
-public class Stoppested {
+public class Stop {
     public int id;
     public String navn;
-    public ArrayList<Avgang> avganger = new ArrayList<>(); 
+    public ArrayList<Departure> avganger = new ArrayList<>(); 
     public int sone;
 
-    public Stoppested(String navn) {
+    public Stop(String navn) {
         this.navn = navn;
     }
 
-    public Stoppested(int id, String navn) {
+    public Stop(int id, String navn) {
         this.id = id;
         this.navn = navn;
     }
 
-    public Stoppested(String navn, int sone) {
+    public Stop(String navn, int sone) {
         this.navn = navn;
         this.sone = sone;
     }
 
-    public void leggTilAvgang(Avgang avgang) {
-        avganger.add(avgang);
+    public void addDeparture(Departure departure) {
+        avganger.add(departure);
     }
 
     public void visAvganger() {
         System.out.println("Avganger fra " + navn + ":");
-        for (Avgang a : avganger) {
+        for (Departure a : avganger) {
             System.out.println("  " + a);
         }
     }
@@ -41,7 +41,7 @@ public class Stoppested {
         return "StoppID: " + id + " Stoppested: " + navn + ".";
     }
 
-    public ArrayList<Avgang> hentAvganger() {
+    public ArrayList<Departure> hentAvganger() {
         return avganger;
     }
 }

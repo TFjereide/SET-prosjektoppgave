@@ -8,26 +8,26 @@ import java.util.ArrayList;
  * Forhåpentligvis trenger den ikke å ha noen form for lokal data,
  * men heller være en form for statisk klasse, med statiske metoder/funksjoner
 */
-public class Veiviser {
+public class PathFinder {
 
-    public class Kant{
-        public int fra;
-        public int til;
-        public float kostnad;
-        public Kant(int fra, int til, float kostnad){
-            this.fra = fra;
-            this.til = til;
-            this.kostnad = kostnad;
+    public class Edge{
+        public int from;
+        public int to;
+        public float cost;
+        public Edge(int from, int to, float cost){
+            this.from = from;
+            this.to = to;
+            this.cost = cost;
         }
     }
 
     public class Node {
         public int id = -1;
-        public Stoppested sted;
-        public ArrayList<Kant> kanter;
+        public Stop stop;
+        public ArrayList<Edge> edges;
     }
 
-    public static Reise beregnReise(Stoppested A, Stoppested B){
+    public static Trip calculatePath(Stop A, Stop B){
         
         // GÅ igjennom alle ruter, og legg til noder fra stoppesteder
         // Legg til kanter fra koblingene.
