@@ -183,6 +183,7 @@ public class DataRepository {
         
         rute.addStop(stopp);
         
+        
         for (String t : tider) {
             LocalTime lt = LocalTime.parse(t, TIME_FMT);
             Departure avg = new Departure(ruteID, stoppID, lt);

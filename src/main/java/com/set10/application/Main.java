@@ -1,5 +1,3 @@
-//Laget denne så jeg ikke skulle fakke opp i main
-
 package com.set10.application;
 
 import com.set10.core.DataRepository;
@@ -135,6 +133,12 @@ public class Main extends Application {
     @Override
     protected void preRun(){
         datadepot = new DataRepository(new DatabaseText());
+        try{datadepot.loadFromDisk();}
+            catch(Exception e){
+                System.err.println("[ERROR] Can't load from disk ->" + e);
+            }
+        navigationservice = new NavigationService(datadepot);
+        navigationservice.FindRoute(datadepot.stopCache.get(0), datadepot.stopCache.get(1));
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres

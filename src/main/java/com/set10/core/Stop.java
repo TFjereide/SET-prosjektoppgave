@@ -1,10 +1,13 @@
 package com.set10.core;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Stop {
     public int id;
     public String navn;
-    public ArrayList<Departure> avganger = new ArrayList<>(); 
+    public ArrayList<Departure> departures = new ArrayList<>();
+    public HashSet<Integer> routes = new HashSet<>();
     public int sone;
 
     public Stop(String navn) {
@@ -22,12 +25,16 @@ public class Stop {
     }
 
     public void addDeparture(Departure departure) {
-        avganger.add(departure);
+        departures.add(departure);
+    }
+
+    public void addRoute(int routeID){
+        routes.add(routeID);
     }
 
     public void visAvganger() {
         System.out.println("Avganger fra " + navn + ":");
-        for (Departure a : avganger) {
+        for (Departure a : departures) {
             System.out.println("  " + a);
         }
     }
@@ -42,6 +49,6 @@ public class Stop {
     }
 
     public ArrayList<Departure> hentAvganger() {
-        return avganger;
+        return departures;
     }
 }

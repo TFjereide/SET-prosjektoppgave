@@ -45,29 +45,29 @@ public class DatabaseText implements IDatabase{
         }
 
         for(int i = 0; i < datadepot.stopCache.size(); i++){
-            Stop stopp = datadepot.stopCache.get(i);
+            Stop stop = datadepot.stopCache.get(i);
 
-            String avganger = ""; 
-            for(int j = 0; j < stopp.avganger.size()-1; j++){
-                avganger += stopp.avganger.get(j).id +",";
+            String departures = ""; 
+            for(int j = 0; j < stop.departures.size()-1; j++){
+                departures += stop.departures.get(j).id +",";
             }
-            avganger += stopp.avganger.getLast().id;
+            departures += stop.departures.getLast().id;
 
-            writer.append("s;" + stopp.id + ";"+ stopp.navn + ";" + avganger + "\n");
+            writer.append("s;" + stop.id + ";"+ stop.navn + ";" + departures + "\n");
         }
 
         for(int i = 0; i < datadepot.routeCache.size(); i++){
             Route rute = datadepot.routeCache.get(i);
-            String stopp = "";
+            String stop = "";
             if (rute.stops.size() != 0){
                 for(int j = 0; j < rute.stops.size()-1; j++){
-                    stopp += rute.stops.get(j).id +",";
+                    stop += rute.stops.get(j).id +",";
                 }
-                stopp += rute.stops.getLast().id;
+                stop += rute.stops.getLast().id;
             }else{
-                System.err.println(rute +" har ingen stopp!");
+                System.err.println(rute +" har ingen stop!");
             }
-            writer.append("r;"+rute.id +";"+stopp+"\n");
+            writer.append("r;"+rute.id +";"+stop+"\n");
         }
 
         for(int i = 0; i < datadepot.ticketCache.size(); i++){
@@ -125,31 +125,31 @@ public class DatabaseText implements IDatabase{
                 String[] bits = line.split(";");
 
                 String[] avgIdxs = bits[3].split(",");
-                ArrayList<Departure> avganger = new ArrayList<>();
+                ArrayList<Departure> departures = new ArrayList<>();
                 for(String string : avgIdxs){
                     int idx = Integer.parseInt(string);
-                    avganger.add(datadepot.departureCache.get(idx));
+                    departures.add(datadepot.departureCache.get(idx));
                 }
-                Stop stopp = new Stop(Integer.parseInt(bits[1]), bits[2]);
-                stopp.avganger = avganger;
+                Stop stop = new Stop(Integer.parseInt(bits[1]), bits[2]);
+                stop.departures = departures;
 
-                datadepot.stopCache.add(stopp);
+                datadepot.stopCache.add(stop);
 
             }else if(line.startsWith("r;")){
                 String[] bits = line.split(";");
 
-                ArrayList<Stop> stopp = new ArrayList<>();
+                ArrayList<Stop> stop = new ArrayList<>();
                 if(bits.length > 2){
                     String[] stoppidxs = bits[2].split(",");
                     for(String string : stoppidxs){
                         int idx = Integer.parseInt(string);
-                        stopp.add(datadepot.stopCache.get(idx));
+                        stop.add(datadepot.stopCache.get(idx));
                     }
                 }
 
 
                 datadepot.routeCache.add(
-                    new Route(Integer.parseInt(bits[1]),stopp)
+                    new Route(Integer.parseInt(bits[1]),stop)
                 );
 
             }else if(line.startsWith("i;")){

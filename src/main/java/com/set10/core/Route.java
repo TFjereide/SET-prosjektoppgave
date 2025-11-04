@@ -19,6 +19,7 @@ public class Route {
 
     public void addStop(Stop stop) {
         stops.add(stop);
+        stop.addRoute(id);
     }
 
     // // Denne gjør ingenting for øyeblikket
