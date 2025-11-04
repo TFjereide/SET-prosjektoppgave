@@ -12,14 +12,13 @@ public class Route {
         this.id = id;
     };
 
-    public Route(int id, ArrayList<Stop> stopp) {
+    public Route(int id, ArrayList<Stop> stop) {
         this.id = id;
-        this.stops = stopp;
+        this.stops = stop;
     };
 
     public void addStop(Stop stop) {
         stops.add(stop);
-        stop.addRoute(id);
     }
 
     // // Denne gjør ingenting for øyeblikket
@@ -39,7 +38,7 @@ public class Route {
     public List<Integer> getZonesFromRoute() {
         Set<Integer> soner = new java.util.HashSet<>();
         for (Stop stopp : stops) {
-            soner.add(stopp.getSone());
+            soner.add(stopp.getZone());
         }
         return new ArrayList<>(soner);
     }

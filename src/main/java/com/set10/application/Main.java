@@ -84,12 +84,12 @@ public class Main extends Application {
             ImGui.spacing();
             ImGui.spacing();
             if (ImGui.collapsingHeader("Routes")) {
-    
                 ImGui.separator();
                 for (Route route : datadepot.hentRuter()) {
                     if (ImGui.treeNode(route.toString())) {
-                        for (Stop stopp : route.stops) {
-                            ImGui.text(stopp.toString());
+                        for (int i = 0; i < route.stops.size(); i++) {
+                            Stop stop = route.stops.get(i);
+                            ImGui.text("idx: "+i+ " " + stop.toString());
                         }
                         ImGui.treePop();
                     }

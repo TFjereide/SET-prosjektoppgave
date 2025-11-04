@@ -53,7 +53,7 @@ public class DatabaseText implements IDatabase{
             }
             departures += stop.departures.getLast().id;
 
-            writer.append("s;" + stop.id + ";"+ stop.navn + ";" + departures + "\n");
+            writer.append("s;" + stop.id + ";"+ stop.name + ";" + departures + "\n");
         }
 
         for(int i = 0; i < datadepot.routeCache.size(); i++){
