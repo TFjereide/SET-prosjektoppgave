@@ -52,8 +52,15 @@ public class DatabaseText implements IDatabase{
                 departures += stop.departures.get(j).id +",";
             }
             departures += stop.departures.getLast().id;
+            
+            String routes = "";
+            var routeList = stop.routes.toArray();
+            for(int j = 0; j < routeList.length-1; j++){
+                routes += routeList[j]+",";
+            }
+            routes += routeList[routeList.length-1];
 
-            writer.append("s;" + stop.id + ";"+ stop.name + ";" + departures + "\n");
+            writer.append("s;" + stop.id + ";"+ stop.name + ";" + departures + ";"+ routes +"\n");
         }
 
         for(int i = 0; i < datadepot.routeCache.size(); i++){
@@ -132,7 +139,11 @@ public class DatabaseText implements IDatabase{
                 }
                 Stop stop = new Stop(Integer.parseInt(bits[1]), bits[2]);
                 stop.departures = departures;
-
+                String[] routeIDsStr = bits[4].split(",");
+                for(String string : routeIDsStr){
+                    int idx = Integer.parseInt(string);
+                    stop.addRoute(idx);
+                }
                 datadepot.stopCache.add(stop);
 
             }else if(line.startsWith("r;")){

@@ -7,7 +7,7 @@ package com.set10.core;
 public class NavigationService {
 
     public DataRepository dataRepository;
-    PathFinder pathFinder ;
+    public PathFinder pathFinder;
 
     public NavigationService(DataRepository dataRepository){
         this.dataRepository = dataRepository;
@@ -15,8 +15,9 @@ public class NavigationService {
     }
     // Vil eventuelt ha slike metoder
     public Trip FindRoute(Stop A, Stop B){
-        Trip trip  = pathFinder.calculatePath(dataRepository, A, B);
-        return trip;
+        // Trip trip  = pathFinder.calculatePath(dataRepository, A, B);
+        // return trip;
+        return null;
     }
     
     // public reise FinnNærmesteStoppested(Posisjon posisjon){}

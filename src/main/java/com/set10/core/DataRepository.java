@@ -41,11 +41,11 @@ public class DataRepository {
         createUser(new User("Olga Bentsdotter"));
 
        //Ruter  
-        Route r33 = new Route(33);
+        Route r33 = new Route(0);
         opprettRute(r33);
-        Route r34 = new Route(34);
+        Route r34 = new Route(1);
         opprettRute(r34);
-        Route r35 = new Route(35);
+        Route r35 = new Route(2);
         opprettRute(r35);
 
 
@@ -181,7 +181,7 @@ public class DataRepository {
 
          }
 
-    private void addDepartureToStop(int ruteID, int stoppID, String... tider) {
+    public void addDepartureToStop(int ruteID, int stoppID, String... tider) {
         Stop stop = getStop(stoppID);
         if (stop == null) return;
 

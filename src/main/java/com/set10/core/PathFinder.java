@@ -39,31 +39,23 @@ public class PathFinder {
         }
         public void print(){
             for (Node node : nodes){
-                System.out.println("N:"+node.id);
+                System.out.println("N->id:"+node.id);
                 for (Edge edge : node.edges){
-                    System.out.println("    E:"+edge.to+","+edge.cost);
+                    System.out.println("    E->to:"+edge.to+" cost:"+edge.cost);
                 }
             }
         }
     }
 
-    public Trip calculatePath(DataRepository repo, Stop A, Stop B){
-
-        // Construct node graph before doing pathfinding
-        // TODO: this should be cached
+    public NodeGraph buildNodeGraph(DataRepository repo){
         NodeGraph nodeGraph = new NodeGraph();
         HashSet<Integer> visitedRoutes = new HashSet<>();
-        for (int routeID : A.routes){
-            Route routeInstance = repo.routeCache.get(routeID);
-            if (routeInstance != null){
-                getConnectedStopsRecursive(repo.routeCache, visitedRoutes, nodeGraph, routeInstance);
-            }
+        for (Route route : repo.routeCache){
+            getConnectedStopsRecursive(repo.routeCache, visitedRoutes, nodeGraph, route);  
         }
-        nodeGraph.print();
-
-        return null;
+        return nodeGraph;
     }
-    
+
     /**
      * Recursively trawls through stops on routes,
      */
@@ -94,5 +86,16 @@ public class PathFinder {
             }
         }
     }
+
+    public Trip calculatePath(NodeGraph graph, Stop A, Stop B){
+
+        // Construct node graph before doing pathfinding
+        // TODO: this should be cached
+        
+        graph.print();
+
+        return null;
+    }
+    
         
 }
