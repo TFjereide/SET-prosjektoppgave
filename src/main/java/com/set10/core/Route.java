@@ -8,6 +8,8 @@ public class Route {
     public int id;
     public ArrayList<Stop> stops = new ArrayList<>();
 
+    public Route(){}
+    
     public Route(int id) {
         this.id = id;
     };

@@ -89,8 +89,8 @@ public class Main extends Application {
         ImGui.text(chosenUserID != null ? "Logged in as: " + chosenUserName : "Not logged in");
 
 
+        ImGui.beginChild("DataView", 500, 500);
         if (chosenUserID != null) {
-            ImGui.beginChild("DataView", 500, 500);
             
             ImGui.separator();
 
@@ -138,9 +138,9 @@ public class Main extends Application {
             if (ImGui.collapsingHeader("Billetter")) {
                 ImGui.separator();
             }
-            ImGui.endChild();
-            ImGui.sameLine();
         }
+        ImGui.endChild();
+        ImGui.sameLine();
 
         ImGui.beginChild("##NodeGraph");
         {
@@ -148,10 +148,10 @@ public class Main extends Application {
             NodeGraph graph = navigationservice.pathFinder.buildNodeGraph(datarepository);
             ImNodes.beginNodeEditor();
             for (Node node: graph.nodes){
-                ImNodes.beginNode(node.id);
-                ImNodes.beginNodeTitleBar();
-                ImGui.text("id:"+node.id);
-                ImNodes.endNodeTitleBar();
+                ImNodes.beginNode(node.stop.id);
+                // ImNodes.beginNodeTitleBar();
+                ImGui.text("id:" + node.stop.id + " name: " + node.stop.name);
+                // ImNodes.endNodeTitleBar();
                 ImNodes.endNode();
             }
 

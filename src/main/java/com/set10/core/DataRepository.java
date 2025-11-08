@@ -42,11 +42,11 @@ public class DataRepository {
 
        //Ruter  
         Route r33 = new Route(0);
-        opprettRute(r33);
+        createRoute(r33);
         Route r34 = new Route(1);
-        opprettRute(r34);
+        createRoute(r34);
         Route r35 = new Route(2);
-        opprettRute(r35);
+        createRoute(r35);
 
 
         //Stoppesteder og avganger
@@ -181,12 +181,19 @@ public class DataRepository {
 
          }
 
+    // Avganger burde ligge i ruter, ikke i stopp.
     public void addDepartureToStop(int ruteID, int stoppID, String... tider) {
         Stop stop = getStop(stoppID);
-        if (stop == null) return;
+        if (stop == null) {
+            System.err.println("There is no route with id="+ruteID);
+            return;
+        }
 
         Route route = getRoute(ruteID);
-        if (route == null) return;
+        if (route == null) {
+            System.err.println("There is no route with id="+ruteID);
+            return;
+        }
         
         route.addStop(stop);
         stop.addRoute(ruteID);
@@ -236,6 +243,26 @@ public class DataRepository {
         return stopCache.get(id);
     }
 
+    public Stop getStop(String name){
+        for(Stop stop :stopCache){
+            if (stop.name == name){
+                return stop;
+            }
+        }
+        return null;
+    }
+    //TODO: Could be a hashmap
+    public int getStopID(String name){
+        for(Stop stop : stopCache){
+            if (stop.name == name){
+                return stop.id;
+            }
+        }
+        return -1;
+    }
+    
+
+
     public ArrayList<Stop> hentStoppesteder(){
         return stopCache;
     }
@@ -246,9 +273,11 @@ public class DataRepository {
         rute.id = ruteCache.size()-1;
         return rute.id;
     } */
-    public int opprettRute(Route rute) {
-        routeCache.add(rute);
-        return rute.id;
+    public int createRoute(Route route) {
+        route.id = routeCache.size();
+        routeCache.add(route);
+        System.out.println("created route:"+route.id);
+        return route.id;
     }
 
    /*public Rute hentRute(int id){
