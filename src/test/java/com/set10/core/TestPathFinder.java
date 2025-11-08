@@ -124,7 +124,7 @@ public class TestPathFinder {
         Trip trip1 = pathfinder.calculatePath(graph, start, end);
 
         ArrayList<Stop> targetStops = new ArrayList<>();
-        // targetStops.add(repo.getStop("start 1"));
+        targetStops.add(repo.getStop("start 1"));
         targetStops.add(repo.getStop("A"));
         targetStops.add(repo.getStop("B"));
         targetStops.add(repo.getStop("C"));

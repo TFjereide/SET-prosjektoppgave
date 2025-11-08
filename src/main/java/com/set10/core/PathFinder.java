@@ -97,9 +97,10 @@ public class PathFinder {
         }
     }
     /**
-     *  Entrypoint for recursive graphbuilder
-     * @param repo
-     * @return
+     * Entrypoint for recursive graphbuilder. 
+     * Recursively trawls through stops on routes, adding them to a nodegraph.
+     * @param repo The DataRepository that contains the route data
+     * @return The complete nodegraph.
     */
 
     public NodeGraph buildNodeGraph(DataRepository repo){
@@ -116,7 +117,7 @@ public class PathFinder {
     }
 
     /**
-     * Recursively trawls through stops on routes, adding them to a nodegraph.
+     * 
      */
     void getConnectedStopsRecursive(ArrayList<Route> routes, HashSet<Integer> visitedRoutes, NodeGraph graph, Route route){
         if (visitedRoutes.contains(route.id)){
@@ -207,8 +208,11 @@ public class PathFinder {
             current = came_from.get(current);
         }
 
-        Trip trip = new Trip();
+        Trip trip = new Trip();        
 
+        // A bit nasty
+        trip.stops.add(graph.getNodeByItemId(StopIDA).stop);
+        
         //Convert to stops
         for(int idx : path.reversed()){
             trip.stops.add(graph.nodes.get(idx).stop);
