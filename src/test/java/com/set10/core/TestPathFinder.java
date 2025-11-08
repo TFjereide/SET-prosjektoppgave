@@ -115,22 +115,43 @@ public class TestPathFinder {
     @DisplayName("Test Calculate path")
     public void TestCalculatePath(){
         
-        int start = repo.getStopID("start 1");
-        assertEquals(false, start == -1);
+        {
+            int start = repo.getStopID("start 1");
+            assertEquals(false, start == -1);
 
-        int end = repo.getStopID("end 1");
-        assertEquals(false, end == -1);
+            int end = repo.getStopID("end 1");
+            assertEquals(false, end == -1);
 
-        Trip trip1 = pathfinder.calculatePath(graph, start, end);
+            Trip trip1 = pathfinder.calculatePath(graph, start, end);
 
-        ArrayList<Stop> targetStops = new ArrayList<>();
-        targetStops.add(repo.getStop("start 1"));
-        targetStops.add(repo.getStop("A"));
-        targetStops.add(repo.getStop("B"));
-        targetStops.add(repo.getStop("C"));
-        targetStops.add(repo.getStop("end 1"));
+            ArrayList<Stop> targetStops = new ArrayList<>();
+            targetStops.add(repo.getStop("start 1"));
+            targetStops.add(repo.getStop("A"));
+            targetStops.add(repo.getStop("B"));
+            targetStops.add(repo.getStop("C"));
+            targetStops.add(repo.getStop("end 1"));
 
-        assertEquals(false, trip1 == null);
-        assertArrayEquals(targetStops.toArray(), trip1.stops.toArray());
+            assertEquals(false, trip1 == null);
+            assertArrayEquals(targetStops.toArray(), trip1.stops.toArray());
+        }
+
+        {
+            int start = repo.getStopID("start 2");
+            assertEquals(false, start == -1);
+
+            int end = repo.getStopID("end 2");
+            assertEquals(false, end == -1);
+
+            Trip trip1 = pathfinder.calculatePath(graph, start, end);
+
+            ArrayList<Stop> targetStops = new ArrayList<>();
+            targetStops.add(repo.getStop("start 2"));
+            targetStops.add(repo.getStop("C"));
+            targetStops.add(repo.getStop("D"));
+            targetStops.add(repo.getStop("end 2"));
+
+            assertEquals(false, trip1 == null);
+            assertArrayEquals(targetStops.toArray(), trip1.stops.toArray());
+        }
     }
 }
