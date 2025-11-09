@@ -9,6 +9,9 @@ import com.set10.core.Route;
 import com.set10.core.Departure;
 import com.set10.core.Ticket;
 import com.set10.core.User;
+import com.set10.core.UserDataService;
+import com.set10.core.DTO.StopDTO;
+import com.set10.core.DTO.UserDTO;
 import com.set10.core.PathFinder.NodeGraph;
 import com.set10.core.PathFinder.Node;
 import com.set10.database.DatabaseText;
@@ -22,10 +25,12 @@ import imgui.extension.imnodes.ImNodesEditorContext;
 
 public class Main extends Application {
 
-    NavigationService navigationservice;
+    NavigationService navigationService;
+    UserDataService userDataService;
     DataRepository datarepository;
     private Integer chosenUserID = null;
     private String chosenUserName = null;
+
     private static ImNodesEditorContext editorContext = null;
     static {
         ImNodes.createContext();
@@ -62,20 +67,20 @@ public class Main extends Application {
 
         ImGui.sameLine();
         if(ImGui.button("test pathfinding")){
-            navigationservice.FindRoute(datarepository.stopCache.get(0), datarepository.stopCache.get(1));
+            //navigationService.FindRoute(datarepository.stopCache.get(0), datarepository.stopCache.get(1));
         }
 
         ImGui.setNextItemWidth(220);
         // Velger bruker
         if (ImGui.beginCombo("##userCombo" , chosenUserName == null ? "Choose User" : chosenUserName)) {
 
-            for (User user : datarepository.getUsers()) {
+            for (UserDTO user : userDataService.getUserList(true)) {
         
-                String name = user.getDisplayName();  
-                boolean selected = (chosenUserID != null && chosenUserID == user.id);
+                String name = user.name();  
+                boolean selected = (chosenUserID != null && chosenUserID == user.id());
 
                 if (ImGui.selectable(name, selected)) {
-                    chosenUserID = user.id;
+                    chosenUserID = user.id();
                     chosenUserName = name;
                 }
 
@@ -117,8 +122,8 @@ public class Main extends Application {
             // Stoppesteder
             if (ImGui.collapsingHeader("Stops")) {
                 ImGui.separator();
-                for (Stop stop : datarepository.hentStoppesteder()) {
-                    if (ImGui.treeNode(stop.toString())) {
+                for (StopDTO stop : navigationService.getStops()) {
+                    if (ImGui.treeNode(stop.name())) {
                         for (Route route : datarepository.hentRuter()) {
                             if (ImGui.treeNode(route.toString())) {
                                 for (Departure departure : stop.hentAvganger()) {
@@ -145,15 +150,14 @@ public class Main extends Application {
         ImGui.beginChild("##NodeGraph");
         {
             ImNodes.editorContextSet(editorContext);
-            NodeGraph graph = navigationservice.pathFinder.buildNodeGraph(datarepository);
             ImNodes.beginNodeEditor();
-            for (Node node: graph.nodes){
-                ImNodes.beginNode(node.stop.id);
-                // ImNodes.beginNodeTitleBar();
-                ImGui.text("id:" + node.stop.id + " name: " + node.stop.name);
-                // ImNodes.endNodeTitleBar();
-                ImNodes.endNode();
-            }
+            // for (Node node: graph.nodes){
+            //     ImNodes.beginNode(node.stop.id);
+            //     // ImNodes.beginNodeTitleBar();
+            //     ImGui.text("id:" + node.stop.id + " name: " + node.stop.name);
+            //     // ImNodes.endNodeTitleBar();
+            //     ImNodes.endNode();
+            // }
 
             ImNodes.endNodeEditor();
         }
@@ -167,9 +171,8 @@ public class Main extends Application {
     @Override
     protected void preRun(){
         datarepository = new DataRepository(new DatabaseText());
-    
-        navigationservice = new NavigationService(datarepository);
-        
+        navigationService = new NavigationService(datarepository);
+        userDataService = new UserDataService(datarepository);
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres
