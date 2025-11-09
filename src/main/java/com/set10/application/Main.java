@@ -1,31 +1,36 @@
-//Laget denne så jeg ikke skulle fakke opp i main
-
 package com.set10.application;
 
-
-import com.set10.core.Datadepot;
-
+import com.set10.core.DataRepository;
 import com.set10.database.DatabaseText;
 
-
-import com.set10.core.Navigasjonstjeneste;
-import com.set10.core.Stoppested;
-import com.set10.core.Rute;
-import com.set10.core.Avgang;
-import com.set10.core.Billett;
-import com.set10.core.Bruker;
+import com.set10.core.NavigationService;
+import com.set10.core.Stop;
+import com.set10.core.Route;
+import com.set10.core.Departure;
+import com.set10.core.Ticket;
+import com.set10.core.User;
+import com.set10.core.PathFinder.NodeGraph;
+import com.set10.core.PathFinder.Node;
 import com.set10.database.DatabaseText;
 
 import imgui.ImGui;
 import imgui.app.Application;
 import imgui.app.Configuration;
+import imgui.extension.imnodes.ImNodes;
+import imgui.extension.imnodes.ImNodesContext;
+import imgui.extension.imnodes.ImNodesEditorContext;
 
 public class Main extends Application {
 
-    Navigasjonstjeneste navigasjonstjeneste;
-    Datadepot datadepot;
-    private Integer valgtBrukerId = null;
-    private String valgtBrukerNavn = null;
+    NavigationService navigationservice;
+    DataRepository datarepository;
+    private Integer chosenUserID = null;
+    private String chosenUserName = null;
+    private static ImNodesEditorContext editorContext = null;
+    static {
+        ImNodes.createContext();
+        editorContext = ImNodes.editorContextCreate();
+    }
 
     @Override
     protected void configure(Configuration config) {
@@ -35,19 +40,43 @@ public class Main extends Application {
     // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
     @Override
     public void process() {
-        ImGui.begin("Debug meny");
+        ImGui.begin("Debug menu");
+        
+        if(ImGui.button("save Data")){
+            try{datarepository.saveToDisk();}
+            catch(Exception e){
+                System.err.println("[ERROR] Can't save to disk ->" + e);
+            }
+        }
+        ImGui.sameLine();
+        if(ImGui.button("Load Data")){
+            try{datarepository.loadFromDisk();}
+            catch(Exception e){
+                System.err.println("[ERROR] Can't load from disk ->" + e);
+            }
+        }
+        ImGui.sameLine();
+        if(ImGui.button("generate dummydata")){
+            datarepository.generateDummyData();
+        }
+
+        ImGui.sameLine();
+        if(ImGui.button("test pathfinding")){
+            navigationservice.FindRoute(datarepository.stopCache.get(0), datarepository.stopCache.get(1));
+        }
+
         ImGui.setNextItemWidth(220);
         // Velger bruker
-        if (ImGui.beginCombo("##brukerCombo" , valgtBrukerNavn == null ? "Velg bruker" : valgtBrukerNavn)) {
+        if (ImGui.beginCombo("##userCombo" , chosenUserName == null ? "Choose User" : chosenUserName)) {
 
-            for (Bruker b : datadepot.hentBrukere()) {
+            for (User user : datarepository.getUsers()) {
         
-                String navn = b.hentVisningsnavn();  
-                boolean selected = (valgtBrukerId != null && valgtBrukerId == b.id);
+                String name = user.getDisplayName();  
+                boolean selected = (chosenUserID != null && chosenUserID == user.id);
 
-                if (ImGui.selectable(navn, selected)) {
-                    valgtBrukerId = b.id;
-                    valgtBrukerNavn = navn;
+                if (ImGui.selectable(name, selected)) {
+                    chosenUserID = user.id;
+                    chosenUserName = name;
                 }
 
                 if (selected)
@@ -57,64 +86,79 @@ public class Main extends Application {
 
         }
         ImGui.sameLine();
+        ImGui.text(chosenUserID != null ? "Logged in as: " + chosenUserName : "Not logged in");
 
 
-        if (valgtBrukerId != null) {
-            ImGui.text("Logget inn som: " + valgtBrukerNavn);
-            ImGui.separator();
-
-
-        // Ruter
-        ImGui.spacing();
-        ImGui.spacing();
-        ImGui.spacing();
-        ImGui.spacing();
-        if (ImGui.collapsingHeader("Ruter")) {
- 
-            ImGui.separator();
-            for (Rute rute : datadepot.hentRuter()) {
-                if (ImGui.treeNode(rute.toString())) {
-                    for (Stoppested stopp : rute.stopp) {
-                        ImGui.text(stopp.toString());
-                    }
-                    ImGui.treePop();
-                }
-                ImGui.separator();
-            }
-        }
-
-        // Stoppesteder
-        if (ImGui.collapsingHeader("Stoppesteder")) {
-            ImGui.separator();
-            for (Stoppested stoppested : datadepot.hentStoppesteder()) {
-                if (ImGui.treeNode(stoppested.toString())) {
-                    for (Rute rute : datadepot.hentRuter()) {
-                        if (ImGui.treeNode(rute.toString())) {
-                            for (Avgang a : stoppested.hentAvganger()) {
-                                if (a.ruteID == rute.id) {
-                                    ImGui.text(a.toString());
-                                }
-                            }
-                            ImGui.treePop();
-                        }
-                    }
-                    ImGui.treePop();
-                }
-                ImGui.separator();
-            }
-        }
-        // Billetter
-        if (ImGui.collapsingHeader("Billetter")) {
-            ImGui.separator();
+        ImGui.beginChild("DataView", 500, 500);
+        if (chosenUserID != null) {
             
-        }
+            ImGui.separator();
 
-        }
 
+            // Ruter
+            ImGui.spacing();
+            ImGui.spacing();
+            ImGui.spacing();
+            ImGui.spacing();
+            if (ImGui.collapsingHeader("Routes")) {
+                ImGui.separator();
+                for (Route route : datarepository.hentRuter()) {
+                    if (ImGui.treeNode(route.toString())) {
+                        for (int i = 0; i < route.stops.size(); i++) {
+                            Stop stop = route.stops.get(i);
+                            ImGui.text("idx: "+i+ " " + stop.toString());
+                        }
+                        ImGui.treePop();
+                    }
+                    ImGui.separator();
+                }
+            }
+
+            // Stoppesteder
+            if (ImGui.collapsingHeader("Stops")) {
+                ImGui.separator();
+                for (Stop stop : datarepository.hentStoppesteder()) {
+                    if (ImGui.treeNode(stop.toString())) {
+                        for (Route route : datarepository.hentRuter()) {
+                            if (ImGui.treeNode(route.toString())) {
+                                for (Departure departure : stop.hentAvganger()) {
+                                    if (departure.routeID == route.id) {
+                                        ImGui.text(departure.toString());
+                                    }
+                                }
+                                ImGui.treePop();
+                            }
+                        }
+                        ImGui.treePop();
+                    }
+                    ImGui.separator();
+                }
+            }
+            // Billetter
+            if (ImGui.collapsingHeader("Billetter")) {
+                ImGui.separator();
+            }
+        }
+        ImGui.endChild();
+        ImGui.sameLine();
+
+        ImGui.beginChild("##NodeGraph");
+        {
+            ImNodes.editorContextSet(editorContext);
+            NodeGraph graph = navigationservice.pathFinder.buildNodeGraph(datarepository);
+            ImNodes.beginNodeEditor();
+            for (Node node: graph.nodes){
+                ImNodes.beginNode(node.stop.id);
+                // ImNodes.beginNodeTitleBar();
+                ImGui.text("id:" + node.stop.id + " name: " + node.stop.name);
+                // ImNodes.endNodeTitleBar();
+                ImNodes.endNode();
+            }
+
+            ImNodes.endNodeEditor();
+        }
+        ImGui.endChild();
         ImGui.end();
-
-   
-
         // uncomment hvis du vil se mer på hva imgui kan gjøre.
         // ImGui.showDemoWindow();
     }
@@ -122,20 +166,10 @@ public class Main extends Application {
     // Dette er initialiseringskode, som kjøres før oppstart av programmet.
     @Override
     protected void preRun(){
-
+        datarepository = new DataRepository(new DatabaseText());
+    
+        navigationservice = new NavigationService(datarepository);
         
-        datadepot = new Datadepot(new DatabaseText());
-        datadepot.opprettDummydata();
-        
-        // try{datadepot.lagreTilDisk();}
-        // catch(Exception e){
-        //     System.err.println("[ERROR] Kan ikke lagre til fil ->" + e);
-        // }
-
-        try{datadepot.lasteFraDisk();}
-        catch(Exception e){
-            System.err.println("[ERROR] Kan ikke laste inn fra fil ->" + e);
-        }
     }
     
     // Starter bare applikasjonen. Burde kanskje ikke røres
