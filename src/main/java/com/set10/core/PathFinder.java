@@ -105,7 +105,7 @@ public class PathFinder {
 
     public NodeGraph buildNodeGraph(DataRepository repo){
         if(repo.routeCache.size() == 0){
-            System.err.println("Routecach empty! No routes to connect stops with.");
+            System.err.println("Routecache empty! No routes to connect stops with.");
         }
         System.out.println("Building nodegraph...");
         NodeGraph nodeGraph = new NodeGraph();
@@ -212,7 +212,7 @@ public class PathFinder {
 
         // A bit nasty
         trip.stops.add(graph.getNodeByItemId(StopIDA).stop);
-        
+
         //Convert to stops
         for(int idx : path.reversed()){
             trip.stops.add(graph.nodes.get(idx).stop);

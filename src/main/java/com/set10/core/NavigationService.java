@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 
+import com.set10.core.DTO.DepartureDTO;
 import com.set10.core.DTO.RouteDTO;
 import com.set10.core.DTO.StopDTO;
 
@@ -15,8 +16,7 @@ public class NavigationService {
 
     private DataRepository dataRepository;
     private PathFinder pathFinder;
-    private PathFinder.NodeGraph nodeGraph;
-   
+    public PathFinder.NodeGraph nodeGraph;
 
     public NavigationService(DataRepository dataRepository){
         this.dataRepository = dataRepository;
@@ -26,6 +26,8 @@ public class NavigationService {
 
 
     public Trip FindRoute(String A, String B){
+        System.err.println("FindRoute() is not implemented yet!");
+        System.exit(1);
         return null;
     }
    
@@ -35,14 +37,28 @@ public class NavigationService {
     }
 
     public String findNearestStop(Position position){
+        System.err.println("findNearestStop() is not implemented yet!");
+        System.exit(1);
         return null;
     }
 
     public ArrayList<RouteDTO> getRoutes(){
-        return null;
+        ArrayList<RouteDTO> routeDTOs = new ArrayList<>();
+        for (Route route : dataRepository.getAllRoutes()){
+            routeDTOs.add(new RouteDTO(route));
+        }
+        return routeDTOs;
     }
 
-    public ArrayList<StopDTO> getStops(){
+    public ArrayList<DepartureDTO> getRouteDeparturesForStop(int routeID, int stopID) {
+        ArrayList<DepartureDTO> departureDTOs = new ArrayList<>();
+        for (Departure departure:dataRepository.getRouteDeparturesForStop(routeID, stopID)){
+            departureDTOs.add(new DepartureDTO(departure));
+        }
+        return departureDTOs;
+    }
+
+    public ArrayList<StopDTO> getAllStops(){
         ArrayList<StopDTO> stops = new ArrayList<>();
         for (Stop stop : dataRepository.stopCache){
             stops.add(new StopDTO(stop));
