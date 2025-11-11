@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class TestDataRepository {
+public class Test_DummyDataRepository {
     
     @Test
     @DisplayName("testSerialiseringOgDeserialisering")
     void testSerialiseringOgDeserialisering(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
-        DataRepository depot = new DataRepository(dbt);
+        DummyDataRepository depot = new DummyDataRepository(dbt);
         depot.generateDummyData();
         assertDoesNotThrow(depot::saveToDisk);
         assertDoesNotThrow(depot::loadFromDisk);
@@ -27,8 +27,8 @@ public class TestDataRepository {
     @DisplayName("serialiseringsintegritet for brukere")
     void testBrukerSerialiseringsintegritet(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
-        DataRepository depot = new DataRepository(dbt); 
-        DataRepository depot2 = new DataRepository(dbt); 
+        DummyDataRepository depot = new DummyDataRepository(dbt); 
+        DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
         depot.generateDummyData();
 
@@ -55,8 +55,8 @@ public class TestDataRepository {
     @DisplayName("serialiseringsintegritet for Billetter")
     void testBillettSerialiseringsintegritet(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
-        DataRepository depot = new DataRepository(dbt); 
-        DataRepository depot2 = new DataRepository(dbt); 
+        DummyDataRepository depot = new DummyDataRepository(dbt); 
+        DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
         depot.generateDummyData();
 
@@ -83,8 +83,8 @@ public class TestDataRepository {
     @DisplayName("serialiseringsintegritet for stoppested")
     void testStoppestedSerialiseringsintegritet(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
-        DataRepository depot = new DataRepository(dbt); 
-        DataRepository depot2 = new DataRepository(dbt); 
+        DummyDataRepository depot = new DummyDataRepository(dbt); 
+        DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
         depot.generateDummyData();
 
@@ -114,8 +114,8 @@ public class TestDataRepository {
     @DisplayName("serialiseringsintegritet for stoppested")
     void testRuterSerialiseringsintegritet(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
-        DataRepository depot = new DataRepository(dbt); 
-        DataRepository depot2 = new DataRepository(dbt); 
+        DummyDataRepository depot = new DummyDataRepository(dbt); 
+        DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
         depot.generateDummyData();
 
@@ -141,8 +141,8 @@ public class TestDataRepository {
     @DisplayName("serialiseringsintegritet for avganger")
     void testAvgangSerialiseringsintegritet(){
         DatabaseText dbt = new DatabaseText("data\\testdata.txt");
-        DataRepository depot = new DataRepository(dbt); 
-        DataRepository depot2 = new DataRepository(dbt); 
+        DummyDataRepository depot = new DummyDataRepository(dbt); 
+        DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
         depot.generateDummyData();
 

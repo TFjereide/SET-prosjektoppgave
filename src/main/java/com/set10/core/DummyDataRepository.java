@@ -4,11 +4,15 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import com.set10.core.interfaces.IDataRepository;
+import com.set10.core.interfaces.IDatabase;
+import com.set10.database.RepositoryDataCache;
+
 /**
  * Holder på data som applikasjonen behøver.
  * 
  */
-public class DataRepository {
+public class DummyDataRepository  implements IDataRepository{
 
     public IDatabase database;
 
@@ -23,7 +27,7 @@ public class DataRepository {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     // Burde fungere som Init
-    public DataRepository(IDatabase database){
+    public DummyDataRepository(IDatabase database){
         this.database = database;
     }
 
@@ -209,11 +213,23 @@ public class DataRepository {
     }
 
     public void saveToDisk() throws Exception{
-        database.serialize(this);
+        database.dumpDataCache(new RepositoryDataCache(
+                    userCache,
+                    ticketCache,
+                    stopCache,
+                    routeCache,
+                    departureCache
+            )
+        );
     }
 
     public void loadFromDisk() throws Exception{
-        database.deserialize(this);
+        RepositoryDataCache cache = database.requestCacheData();
+        stopCache = cache.stops;
+        departureCache = cache.departures;
+        routeCache = cache.routes;
+        userCache = cache.users;
+        ticketCache = cache.tickets;
     }
 
     // Returnerer id til nylaget objekt 
@@ -309,4 +325,13 @@ public class DataRepository {
     public ArrayList<Departure> getAllDepartures() {
         return departureCache;
     }
+
+    public ArrayList<Ticket> getallTickets(){
+        return ticketCache;
+    }
+
+    public ArrayList<User> getAllUsers(){
+        return userCache;
+    }
+
 }

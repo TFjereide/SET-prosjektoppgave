@@ -12,16 +12,16 @@ import org.junit.jupiter.api.Test;
 import com.set10.database.DatabaseText;
 
 @DisplayName("Test Pathfinder")
-public class TestPathFinder {
+public class Test_PathFinder {
 
-    public DataRepository repo;
+    public DummyDataRepository repo;
     public PathFinder pathfinder;
     public PathFinder.NodeGraph graph;
 
 
     @BeforeEach
     public void setUp(){
-        repo = new DataRepository(new DatabaseText("data\\testdata.txt"));
+        repo = new DummyDataRepository(new DatabaseText("data\\testdata.txt"));
 
         repo.ticketCache.clear();
         repo.userCache.clear();

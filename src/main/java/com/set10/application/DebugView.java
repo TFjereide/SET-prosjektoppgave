@@ -1,12 +1,12 @@
 package com.set10.application;
 
-import com.set10.core.DataRepository;
 import com.set10.database.DatabaseText;
 
 import com.set10.core.NavigationService;
 import com.set10.core.Stop;
 import com.set10.core.Route;
 import com.set10.core.Departure;
+import com.set10.core.DummyDataRepository;
 import com.set10.core.Ticket;
 import com.set10.core.User;
 import com.set10.core.UserDataService;
@@ -29,7 +29,7 @@ public class DebugView extends Application {
 
     NavigationService navigationService;
     UserDataService userDataService;
-    DataRepository datarepository;
+    DummyDataRepository datarepository;
     private Integer chosenUserID = null;
     private String chosenUserName = null;
 
@@ -39,7 +39,7 @@ public class DebugView extends Application {
         editorContext = ImNodes.editorContextCreate();
     }
 
-    public DebugView(NavigationService navigationService, UserDataService userDataService, DataRepository datarepository){
+    public DebugView(NavigationService navigationService, UserDataService userDataService, DummyDataRepository datarepository){
         this.navigationService = navigationService;
         this.userDataService = userDataService;
         this.datarepository = datarepository;

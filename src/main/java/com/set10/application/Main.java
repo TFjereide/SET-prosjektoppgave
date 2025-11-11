@@ -1,6 +1,6 @@
 package com.set10.application;
 
-import com.set10.core.DataRepository;
+import com.set10.core.DummyDataRepository;
 import com.set10.core.NavigationService;
 import com.set10.core.UserDataService;
 import com.set10.database.DatabaseText;
@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {    
         System.out.println("Starting application");    
-        DataRepository datarepository = new DataRepository(new DatabaseText());
+        DummyDataRepository datarepository = new DummyDataRepository(new DatabaseText());
         try{
             datarepository.loadFromDisk();
         }catch(Exception e){

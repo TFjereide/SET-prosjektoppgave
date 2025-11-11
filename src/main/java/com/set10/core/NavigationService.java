@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.set10.core.DTO.DepartureDTO;
 import com.set10.core.DTO.RouteDTO;
 import com.set10.core.DTO.StopDTO;
+import com.set10.core.interfaces.IDataRepository;
 
 /**
  * Denne klassen er en form for API ment for å kunne utføre grunnleggende handlinger 
@@ -14,11 +15,11 @@ import com.set10.core.DTO.StopDTO;
  */
 public class NavigationService {
 
-    private DataRepository dataRepository;
+    private IDataRepository dataRepository;
     private PathFinder pathFinder;
     public PathFinder.NodeGraph nodeGraph;
 
-    public NavigationService(DataRepository dataRepository){
+    public NavigationService(IDataRepository dataRepository){
         this.dataRepository = dataRepository;
         this.pathFinder = new PathFinder();
         nodeGraph = pathFinder.buildNodeGraph(dataRepository);
@@ -60,7 +61,7 @@ public class NavigationService {
 
     public ArrayList<StopDTO> getAllStops(){
         ArrayList<StopDTO> stops = new ArrayList<>();
-        for (Stop stop : dataRepository.stopCache){
+        for (Stop stop : dataRepository.getAllStops()){
             stops.add(new StopDTO(stop));
         }
         return stops;

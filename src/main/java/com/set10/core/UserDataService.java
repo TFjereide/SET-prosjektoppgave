@@ -4,12 +4,13 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.set10.core.DTO.UserDTO;
+import com.set10.core.interfaces.IDataRepository;
 
 public class UserDataService {
-    private DataRepository dataRepository;
+    private IDataRepository dataRepository;
     
     
-    public UserDataService(DataRepository dataRepository){
+    public UserDataService(IDataRepository dataRepository){
         this.dataRepository = dataRepository;
     }
 
@@ -17,11 +18,11 @@ public class UserDataService {
         ArrayList<UserDTO> users = new ArrayList<>();
         
         if (withIds){
-            for(User user: dataRepository.getUsers()){
+            for(User user: dataRepository.getAllUsers()){
                 users.add(new UserDTO(user));
             }
         }else{
-            for(User user: dataRepository.getUsers()){
+            for(User user: dataRepository.getAllUsers()){
                 users.add(new UserDTO(-1, user.name));
             }
         }

@@ -8,14 +8,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-import com.set10.core.IDatabase;
 import com.set10.core.Route;
 import com.set10.core.Stop;
 import com.set10.core.Departure;
 import com.set10.core.Ticket;
 import com.set10.core.User;
-import com.set10.core.DataRepository;
-
+import com.set10.core.interfaces.IDatabase;
 
 /* 
  * Dataformat skamløst stjålet fra .obj:
@@ -36,16 +34,18 @@ public class DatabaseText implements IDatabase{
         this.path = path;
     }
 
-    public void serialize(DataRepository datadepot) throws Exception{
+    public void dumpDataCache(RepositoryDataCache cache) throws Exception{
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-
-        for(int i = 0; i < datadepot.departureCache.size(); i++){
-            Departure avgang = datadepot.departureCache.get(i);
+        
+        var allDepartures = cache.departures;
+        for(int i = 0; i < allDepartures.size(); i++){
+            Departure avgang = allDepartures.get(i);
             writer.append("a;" + avgang.id + ";" + avgang.routeID+";" + avgang.stopID+ ";" + avgang.time +"\n");
         }
 
-        for(int i = 0; i < datadepot.stopCache.size(); i++){
-            Stop stop = datadepot.stopCache.get(i);
+        var allStops = cache.stops;
+        for(int i = 0; i < allStops.size(); i++){
+            Stop stop = allStops.get(i);
 
             String departures = ""; 
             for(int j = 0; j < stop.departures.size()-1; j++){
@@ -63,8 +63,9 @@ public class DatabaseText implements IDatabase{
             writer.append("s;" + stop.id + ";"+ stop.name + ";" + departures + ";"+ routes +"\n");
         }
 
-        for(int i = 0; i < datadepot.routeCache.size(); i++){
-            Route rute = datadepot.routeCache.get(i);
+        var allRoutes = cache.routes;
+        for(int i = 0; i < allRoutes.size(); i++){
+            Route rute = allRoutes.get(i);
             String stop = "";
             if (rute.stops.size() != 0){
                 for(int j = 0; j < rute.stops.size()-1; j++){
@@ -77,13 +78,15 @@ public class DatabaseText implements IDatabase{
             writer.append("r;"+rute.id +";"+stop+"\n");
         }
 
-        for(int i = 0; i < datadepot.ticketCache.size(); i++){
-            Ticket billett = datadepot.ticketCache.get(i);
+        var allTickets = cache.tickets;
+        for(int i = 0; i < allTickets.size(); i++){
+            Ticket billett = allTickets.get(i);
             writer.append("i;" + billett.id + ";" + billett.type + ";" +billett.validFrom + ";" + billett.validTo + "\n");
         }
 
-        for(int i = 0; i < datadepot.userCache.size(); i++){
-            User bruker = datadepot.userCache.get(i);
+        var allUsers = cache.users;
+        for(int i = 0; i < allUsers.size(); i++){
+            User bruker = allUsers.get(i);
             String aktiveb = "";
             if (!bruker.activeTickets.isEmpty()){
                 for(int j = 0; j < bruker.activeTickets.size()-1; j++){
@@ -106,20 +109,22 @@ public class DatabaseText implements IDatabase{
         writer.close();
     }
 
-    public void deserialize(DataRepository datadepot) throws Exception{
-        BufferedReader reader = new BufferedReader(new FileReader(path));
 
-        datadepot.userCache = new ArrayList<>();
-        datadepot.ticketCache = new ArrayList<>();
-        datadepot.stopCache = new ArrayList<>();
-        datadepot.routeCache = new ArrayList<>();
-        datadepot.departureCache = new ArrayList<>();
+
+    public RepositoryDataCache requestCacheData() throws Exception{
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        RepositoryDataCache cache = new RepositoryDataCache();
+        cache.users = new ArrayList<>();
+        cache.tickets = new ArrayList<>();
+        cache.stops = new ArrayList<>();
+        cache.routes = new ArrayList<>();
+        cache.departures = new ArrayList<>();
 
         String line;
         while ((line = reader.readLine()) != null){
             if(line.startsWith("a;")){
                 String[] bits = line.split(";");
-                datadepot.departureCache.add(
+                cache.departures.add(
                     new Departure(
                         Integer.parseInt(bits[1]),  // id
                         Integer.parseInt(bits[2]),  // ruteid
@@ -135,7 +140,7 @@ public class DatabaseText implements IDatabase{
                 ArrayList<Departure> departures = new ArrayList<>();
                 for(String string : avgIdxs){
                     int idx = Integer.parseInt(string);
-                    departures.add(datadepot.departureCache.get(idx));
+                    departures.add(cache.departures.get(idx));
                 }
                 Stop stop = new Stop(Integer.parseInt(bits[1]), bits[2]);
                 stop.departures = departures;
@@ -144,7 +149,7 @@ public class DatabaseText implements IDatabase{
                     int idx = Integer.parseInt(string);
                     stop.addRoute(idx);
                 }
-                datadepot.stopCache.add(stop);
+                cache.stops.add(stop);
 
             }else if(line.startsWith("r;")){
                 String[] bits = line.split(";");
@@ -154,19 +159,19 @@ public class DatabaseText implements IDatabase{
                     String[] stoppidxs = bits[2].split(",");
                     for(String string : stoppidxs){
                         int idx = Integer.parseInt(string);
-                        stop.add(datadepot.stopCache.get(idx));
+                        stop.add(cache.stops.get(idx));
                     }
                 }
 
 
-                datadepot.routeCache.add(
+                cache.routes.add(
                     new Route(Integer.parseInt(bits[1]),stop)
                 );
 
             }else if(line.startsWith("i;")){
                 String[] bits = line.split(";");
                 Ticket billett = new Ticket(Ticket.Type.valueOf(bits[2]), LocalDateTime.parse(bits[3]));
-                datadepot.ticketCache.add(billett);
+                cache.tickets.add(billett);
 
             }else if(line.startsWith("b;")){
                 String[] bits = line.split(";");
@@ -175,21 +180,23 @@ public class DatabaseText implements IDatabase{
                 if(bits.length > 3){
                     String[] aktiveBilletterStr = bits[3].split(",");
                     for(String strId : aktiveBilletterStr){
-                        Ticket billett = datadepot.ticketCache.get(Integer.parseInt(strId));
+                        Ticket billett = cache.tickets.get(Integer.parseInt(strId));
                         bruker.activeTickets.add(billett);
                     }
 
                     String[] gamleBilletterStr = bits[4].split(",");
                     for(String strId : gamleBilletterStr){
-                        Ticket billett = datadepot.ticketCache.get(Integer.parseInt(strId));
+                        Ticket billett = cache.tickets.get(Integer.parseInt(strId));
                         bruker.oldTickets.add(billett);
                     }
                 }
 
 
-                datadepot.userCache.add(bruker);
+                cache.users.add(bruker);
             }
         }
         reader.close();
+        return cache;
     }
+
 }
