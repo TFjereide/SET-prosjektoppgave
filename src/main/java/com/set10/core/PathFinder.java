@@ -98,6 +98,7 @@ public class PathFinder {
             }
         }
     }
+
     /**
      * Entrypoint for recursive graphbuilder. 
      * Recursively trawls through stops on routes, adding them to a nodegraph.
@@ -161,7 +162,7 @@ public class PathFinder {
                 node.edges.add(edge);
                 
                 // Spread out from current stop if more routes go from here.
-                for (int newroute:stop.routes){
+                for (int newroute : stop.routes){
                     Route newrouteinstance = routes.get(newroute);
                     if (newrouteinstance != null){
                         getConnectedStopsRecursive(routes, visitedRoutes,  graph, newrouteinstance);
@@ -171,9 +172,15 @@ public class PathFinder {
         }
     }
 
-
+    // Direct translation of:
     // https://www.redblobgames.com/pathfinding/a-star/introduction.html
+    // Should be done differently in the future. Too many small allocations etc.
     public Trip calculatePath(NodeGraph graph, int StopIDA, int StopIDB){
+
+        // No trip to be had
+        if (StopIDA == StopIDB){
+            return null;
+        }
         
         int start = graph.getNodeId(StopIDA);
         if (start == -1){
@@ -202,6 +209,10 @@ public class PathFinder {
                     came_from.put(edge.to, current);
                 }
             }
+        }
+        // No possible path
+        if(!came_from.containsKey(end)){
+            return null;
         }
 
         ArrayList<Integer> path = new ArrayList<>();

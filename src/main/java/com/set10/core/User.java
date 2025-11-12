@@ -7,6 +7,8 @@ public class User {
     public ArrayList<Ticket> activeTickets;
     public ArrayList<Ticket> oldTickets;
 
+    public Trip activeTrip = null;
+
     public User(int id, String navn){
         this.id = id;
         this.name = navn;

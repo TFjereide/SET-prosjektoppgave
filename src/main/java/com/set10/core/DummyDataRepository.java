@@ -262,7 +262,7 @@ public class DummyDataRepository  implements IDataRepository{
 
     public Stop getStop(String name){
         for(Stop stop :stopCache){
-            if (stop.name == name){
+            if (stop.name.equalsIgnoreCase(name)){
                 return stop;
             }
         }
@@ -271,7 +271,7 @@ public class DummyDataRepository  implements IDataRepository{
     //TODO: Could be a hashmap
     public int getStopID(String name){
         for(Stop stop : stopCache){
-            if (stop.name == name){
+            if (stop.name.equalsIgnoreCase(name)){
                 return stop.id;
             }
         }

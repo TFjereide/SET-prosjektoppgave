@@ -26,15 +26,39 @@ public class NavigationService {
     }
 
 
-    public Trip FindRoute(String A, String B){
-        System.err.println("FindRoute() is not implemented yet!");
-        System.exit(1);
-        return null;
+    /**
+     * 
+     * @param nameA name of stop the trip starts from
+     * @param nameB name of stop the trip ends at
+     * @return Trip, null if trip is not possible not possible
+     */
+    public Trip FindTrip(String nameA, String nameB){
+  
+        int stopIdA = dataRepository.getStopID(nameA);
+        int stopIdB = dataRepository.getStopID(nameB);
+
+        if( stopIdA == -1){
+            return null;
+        }
+
+        if(stopIdB == -1){
+            return null;
+        }
+
+        return pathFinder.calculatePath(nodeGraph, stopIdA, stopIdB);
     }
    
+    // Brukes ikke til noe enda
     private class Position{
         public int x;
         public int y;
+    }
+
+    public boolean stopExists(String name){
+        if (dataRepository.getStopID(name) != -1){
+            return true;
+        }
+        return false;
     }
 
     public String findNearestStop(Position position){

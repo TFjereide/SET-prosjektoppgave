@@ -154,4 +154,58 @@ public class Test_PathFinder {
             assertArrayEquals(targetStops.toArray(), trip1.stops.toArray());
         }
     }
+    
+    @Test
+    @DisplayName("Test Calculate impossible path")
+    public void TestCalculateImpossiblePath(){
+        
+        {
+            int start = repo.getStopID("end 2");
+            assertEquals(false, start == -1);
+
+            int end = repo.getStopID("start 2");
+            assertEquals(false, end == -1);
+
+            Trip trip1 = pathfinder.calculatePath(graph, start, end);
+            assertEquals(true, trip1 == null);
+        }
+
+        {
+            int start = repo.getStopID("C");
+            assertEquals(false, start == -1);
+
+            int end = repo.getStopID("A");
+            assertEquals(false, end == -1);
+
+            Trip trip1 = pathfinder.calculatePath(graph, start, end);
+            assertEquals(true, trip1 == null);
+        }
+
+    }
+
+    @Test
+    @DisplayName("Test Calculate no length path")
+    public void TestCalculateNoLengthPath(){
+        
+        {
+            int start = repo.getStopID("A");
+            assertEquals(false, start == -1);
+
+            int end = repo.getStopID("A");
+            assertEquals(false, end == -1);
+
+            Trip trip1 = pathfinder.calculatePath(graph, start, end);
+            assertEquals(true, trip1 == null);
+        }
+        {
+            int start = repo.getStopID("B");
+            assertEquals(false, start == -1);
+
+            int end = repo.getStopID("B");
+            assertEquals(false, end == -1);
+
+            Trip trip1 = pathfinder.calculatePath(graph, start, end);
+            assertEquals(true, trip1 == null);
+        }
+    }
 }

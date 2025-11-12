@@ -45,10 +45,10 @@ public class Ticket {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        return "\nTicket:\n" +
-                "Type: " + type +
-                "\nvalidFrom: " + validFrom.format(formatter) +
-                "\nvalidTo: " + validTo.format(formatter) +
-                "\nvalidForZones: " + validForZones.toString();
+        return  "id:" + id +
+                " type: " + type +
+                " valid From: " + validFrom.format(formatter) +
+                " valid To: " + validTo.format(formatter) +
+                " zones: " + validForZones.toString();
     }
 }
