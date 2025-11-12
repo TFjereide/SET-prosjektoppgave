@@ -4,11 +4,15 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import com.set10.core.interfaces.IDataRepository;
+import com.set10.core.interfaces.IDatabase;
+import com.set10.database.RepositoryDataCache;
+
 /**
  * Holder på data som applikasjonen behøver.
  * 
  */
-public class DataRepository {
+public class DummyDataRepository  implements IDataRepository{
 
     public IDatabase database;
 
@@ -17,12 +21,13 @@ public class DataRepository {
 
     public ArrayList<Stop> stopCache = new ArrayList<>();
     public ArrayList<Route> routeCache = new ArrayList<>();
+
     public ArrayList<Departure> departureCache = new ArrayList<>();
 
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     // Burde fungere som Init
-    public DataRepository(IDatabase database){
+    public DummyDataRepository(IDatabase database){
         this.database = database;
     }
 
@@ -201,18 +206,30 @@ public class DataRepository {
         for (String t : tider) {
             LocalTime lt = LocalTime.parse(t, TIME_FMT);
             Departure avg = new Departure(ruteID, stoppID, lt);
-            opprettAvgang(avg);
+            createDeparture(avg);
             stop.addDeparture(avg);
             departureCache.add(avg); 
         }
     }
 
     public void saveToDisk() throws Exception{
-        database.serialize(this);
+        database.dumpDataCache(new RepositoryDataCache(
+                    userCache,
+                    ticketCache,
+                    stopCache,
+                    routeCache,
+                    departureCache
+            )
+        );
     }
 
     public void loadFromDisk() throws Exception{
-        database.deserialize(this);
+        RepositoryDataCache cache = database.requestCacheData();
+        stopCache = cache.stops;
+        departureCache = cache.departures;
+        routeCache = cache.routes;
+        userCache = cache.users;
+        ticketCache = cache.tickets;
     }
 
     // Returnerer id til nylaget objekt 
@@ -261,18 +278,10 @@ public class DataRepository {
         return -1;
     }
     
-
-
-    public ArrayList<Stop> hentStoppesteder(){
+    public ArrayList<Stop> getAllStops(){
         return stopCache;
     }
 
-    // Returnerer id til nylaget objekt 
-    /*public int opprettRute(Rute rute){
-        ruteCache.add(rute);
-        rute.id = ruteCache.size()-1;
-        return rute.id;
-    } */
     public int createRoute(Route route) {
         route.id = routeCache.size();
         routeCache.add(route);
@@ -280,9 +289,6 @@ public class DataRepository {
         return route.id;
     }
 
-   /*public Rute hentRute(int id){
-        return ruteCache.get(id);
-    }*/
     public Route getRoute(int id) {
         for (Route r : routeCache) {
             if (r.id == id) {
@@ -292,19 +298,40 @@ public class DataRepository {
         return null;
     }
     
-    public ArrayList<Route> hentRuter(){
+    public ArrayList<Route> getAllRoutes(){
         return routeCache;
     }
 
     // Returnerer id til nylaget objekt 
-    public int opprettAvgang(Departure avgang){
-        departureCache.add(avgang);
-        avgang.id = departureCache.size()-1;
-        return avgang.id;
+    public int createDeparture(Departure departure){
+        departureCache.add(departure);
+        departure.id = departureCache.size()-1;
+        return departure.id;
+    }
+    
+    
+    public ArrayList<Departure> getRouteDeparturesForStop(int routeID, int stopID) {
+        ArrayList<Departure> departures = new ArrayList<>();
+        Stop stop = stopCache.get(stopID);
+        for(Departure departure : stop.departures){
+            if (departure.routeID == routeID){
+                departures.add(departure);
+            }
+        }
+        return departures;
+    }
+    
+    
+    public ArrayList<Departure> getAllDepartures() {
+        return departureCache;
     }
 
-    public ArrayList<Departure> hentAvganger() {
-        return departureCache;
+    public ArrayList<Ticket> getallTickets(){
+        return ticketCache;
+    }
+
+    public ArrayList<User> getAllUsers(){
+        return userCache;
     }
 
 }

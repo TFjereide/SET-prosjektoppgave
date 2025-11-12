@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.set10.core.interfaces.IDataRepository;
+
 
 /** 
  * Klasse som inneholder metoder for å beregne reiser
@@ -103,15 +105,16 @@ public class PathFinder {
      * @return The complete nodegraph.
     */
 
-    public NodeGraph buildNodeGraph(DataRepository repo){
-        if(repo.routeCache.size() == 0){
-            System.err.println("Routecach empty! No routes to connect stops with.");
+    public NodeGraph buildNodeGraph(IDataRepository repo){
+        var routes = repo.getAllRoutes();
+        if(routes.size() == 0){
+            System.err.println("Routecache empty! No routes to connect stops with.");
         }
         System.out.println("Building nodegraph...");
         NodeGraph nodeGraph = new NodeGraph();
         HashSet<Integer> visitedRoutes = new HashSet<>();
-        for (Route route : repo.routeCache){
-            getConnectedStopsRecursive(repo.routeCache, visitedRoutes, nodeGraph, route);  
+        for (Route route : routes){
+            getConnectedStopsRecursive(routes, visitedRoutes, nodeGraph, route);  
         }
         return nodeGraph;
     }
@@ -212,7 +215,7 @@ public class PathFinder {
 
         // A bit nasty
         trip.stops.add(graph.getNodeByItemId(StopIDA).stop);
-        
+
         //Convert to stops
         for(int idx : path.reversed()){
             trip.stops.add(graph.nodes.get(idx).stop);
