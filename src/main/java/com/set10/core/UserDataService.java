@@ -14,6 +14,22 @@ public class UserDataService {
         this.dataRepository = dataRepository;
     }
 
+    public boolean setUserActiveTrip(Trip trip, int userId){
+        // TODO: Validate
+        User user = dataRepository.getUser(userId);
+        user.activeTrip = trip;
+        return true;
+    }
+    
+    public Trip getUserActiveTrip(int userId){
+        return dataRepository.getUser(userId).activeTrip;
+    }
+
+    // TODO: use DTO
+    public User getUser(int userId){
+        return dataRepository.getUser(userId);
+    }
+
     public ArrayList<UserDTO> getUserList(boolean withIds){
         ArrayList<UserDTO> users = new ArrayList<>();
         

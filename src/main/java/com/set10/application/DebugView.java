@@ -19,8 +19,10 @@ import com.set10.core.PathFinder.NodeGraph;
 import com.set10.core.PathFinder.Node;
 
 import imgui.ImGui;
+import imgui.ImVec4;
 import imgui.app.Application;
 import imgui.app.Configuration;
+import imgui.flag.ImGuiCol;
 import imgui.type.ImString;
 
 public class DebugView extends Application {
@@ -30,15 +32,15 @@ public class DebugView extends Application {
     DummyDataRepository datarepository;
     
     // interaction data
-    private Integer chosenUserID = null;
-    private String chosenUserName = null;
+    private Integer selectedUserID = null;
+    private String selectedUserName = null;
 
     private ImString imFromStop = new ImString();
     private String fromStop = "";
     private ImString imToStop = new ImString();
     private String toStop = "";
 
-    private Trip userTrip = null;
+    private Trip tempTrip = null;
 
     public DebugView(NavigationService navigationService, UserDataService userDataService, DummyDataRepository datarepository){
         this.navigationService = navigationService;
@@ -72,14 +74,10 @@ public class DebugView extends Application {
             }
         }
         ImGui.sameLine();
-        if(ImGui.button("generate dummydata")){
+        if(ImGui.button("Generate dummydata")){
             datarepository.generateDummyData();
         }
 
-        ImGui.sameLine();
-        if(ImGui.button("test pathfinding")){
-            //navigationService.FindRoute(datarepository.stopCache.get(0), datarepository.stopCache.get(1));
-        }
         ImGui.separatorText("Data");
         // Ruter
         if (ImGui.collapsingHeader("Routes")) {
@@ -123,6 +121,14 @@ public class DebugView extends Application {
         // Billetter
         if (ImGui.collapsingHeader("Billetter")) {
             ImGui.separator();
+            if (datarepository.getallTickets().size() == 0){
+                ImGui.text("No tickets.");
+            }
+            else{
+                for(Ticket ticket : datarepository.getallTickets()){
+                    ImGui.text(ticket.toString());
+                }
+            }
         }
         
         ImGui.endChild();
@@ -131,16 +137,16 @@ public class DebugView extends Application {
         ImGui.beginChild("##UserActions");
         ImGui.setNextItemWidth(220);
         // Velger bruker
-        if (ImGui.beginCombo("##userCombo" , chosenUserName == null ? "Choose User" : chosenUserName)) {
+        if (ImGui.beginCombo("##userCombo" , selectedUserName == null ? "Select User" : selectedUserName)) {
 
             for (UserDTO user : userDataService.getUserList(true)) {
         
                 String name = user.name();  
-                boolean selected = (chosenUserID != null && chosenUserID == user.id());
+                boolean selected = (selectedUserID != null && selectedUserID == user.id());
 
                 if (ImGui.selectable(name, selected)) {
-                    chosenUserID = user.id();
-                    chosenUserName = name;
+                    selectedUserID = user.id();
+                    selectedUserName = name;
                 }
 
                 if (selected)
@@ -150,28 +156,82 @@ public class DebugView extends Application {
 
         }
         ImGui.sameLine();
-        ImGui.text(chosenUserID != null ? "Logged in as: " + chosenUserName : "Not logged in");
+        ImGui.text(selectedUserID != null ? "Logged in as: " + selectedUserName : "Not logged in");
 
-        if (chosenUserID != null) {
+        if (selectedUserID != null) {
             
             // Finne en reise med to strenger. Kan bare velge mellom stoppene kanskje
             ImGui.separatorText("Trip");
-            if(ImGui.inputText("From", imFromStop)){
-                fromStop = imFromStop.toString();
-                tripCallback();
+            {
+                if(ImGui.inputText("From", imFromStop)){
+                    fromStop = imFromStop.toString();
+                    tripCallback();
+                }
+    
+                ImGui.sameLine();
+                if(navigationService.stopExists(fromStop)){
+                    ImGui.textColored(0,255,0,255,"Exists!");
+                }else{
+                    ImGui.textColored(255,0,0,255,"X");
+                }
             }
-            if(ImGui.inputText("To", imToStop)){
-                toStop = imFromStop.toString();
-                tripCallback();
+            {
+                if(ImGui.inputText("To", imToStop)){
+                    toStop = imToStop.toString();
+                    tripCallback();
+                }
+
+                ImGui.sameLine();
+                if(navigationService.stopExists(toStop)){
+                    ImGui.textColored(0,255,0,255,"Exists!");
+                }else{
+                    ImGui.textColored(255,0,0,255,"X");
+                }
             }
-            if(userTrip != null){
-                ImGui.text("Has trip!");
+
+            if(tempTrip != null){
+                ImGui.textColored(0, 255, 0, 255,"Found trip!");
+                
+                if(ImGui.button("Activate trip")){
+                    userDataService.setUserActiveTrip(tempTrip, selectedUserID);
+                }
+                
+
             }else{
-                ImGui.text("No trip!");
+                ImGui.textDisabled("No trip");
+            }
+            Trip userTrip = userDataService.getUserActiveTrip(selectedUserID);
+            if (userTrip != null){
+                if(ImGui.collapsingHeader("Current trip: Show stops")){
+                    int i = 1;
+                    for(Stop stop : userTrip.stops){
+                        ImGui.bulletText(i + ". " + stop.name);
+                        i++;
+                    }
+                }
             }
             
             // Gi en billett som gjelder sonene for reisen
             ImGui.separatorText("Ticket");
+            if(tempTrip != null){
+                if(ImGui.button("Give user valid ticket for trip.")){
+
+                }
+
+            }else{
+                ImGui.textDisabled("Give user valid ticket for trip.");
+            }
+            User user = datarepository.getUser(selectedUserID);
+            for(Ticket ticket : user.activeTickets){
+                ImGui.bullet();
+                ImGui.sameLine();
+                ImGui.textColored(0,255,0,255, ticket.toString());
+            }
+            for(Ticket ticket : user.oldTickets){
+                ImGui.bullet();
+                ImGui.sameLine();
+                ImGui.textColored(255,0,0,255, ticket.toString());
+            }
 
         }
         ImGui.endChild();
@@ -181,12 +241,14 @@ public class DebugView extends Application {
     }
 
     void tripCallback(){
-        userTrip = navigationService.FindTrip(fromStop, toStop);
+        tempTrip = navigationService.FindTrip(fromStop, toStop);
     }
 
     @Override
     protected void preRun(){
-        
+        String teststr = "test";
+        // ImString test = new ImString("test");   
+        // if(test.)
     }
     
     // // Starter bare applikasjonen. Burde kanskje ikke røres

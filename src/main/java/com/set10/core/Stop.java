@@ -45,7 +45,7 @@ public class Stop {
 
     @Override
     public String toString() {
-        return "ID: " + id + " name: " + name + ".";
+        return "ID: " + id + " name: '" + name + "'";
     }
 
     public ArrayList<Departure> hentAvganger() {
