@@ -26,12 +26,13 @@ public class NavigationService {
     }
 
 
-    public Trip FindRoute(String A, String B){
+    public Trip FindTrip(String A, String B){
         System.err.println("FindRoute() is not implemented yet!");
         System.exit(1);
         return null;
     }
    
+    // Brukes ikke til noe enda
     private class Position{
         public int x;
         public int y;

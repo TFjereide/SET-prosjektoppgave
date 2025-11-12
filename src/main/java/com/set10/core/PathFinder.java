@@ -161,7 +161,7 @@ public class PathFinder {
                 node.edges.add(edge);
                 
                 // Spread out from current stop if more routes go from here.
-                for (int newroute:stop.routes){
+                for (int newroute : stop.routes){
                     Route newrouteinstance = routes.get(newroute);
                     if (newrouteinstance != null){
                         getConnectedStopsRecursive(routes, visitedRoutes,  graph, newrouteinstance);
