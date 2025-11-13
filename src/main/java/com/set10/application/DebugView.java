@@ -1,7 +1,5 @@
 package com.set10.application;
 
-import com.set10.database.DatabaseText;
-
 import com.set10.core.NavigationService;
 import com.set10.core.Stop;
 import com.set10.core.Route;
@@ -11,18 +9,11 @@ import com.set10.core.Ticket;
 import com.set10.core.Trip;
 import com.set10.core.User;
 import com.set10.core.UserDataService;
-import com.set10.core.DTO.DepartureDTO;
-import com.set10.core.DTO.RouteDTO;
-import com.set10.core.DTO.StopDTO;
 import com.set10.core.DTO.UserDTO;
-import com.set10.core.PathFinder.NodeGraph;
-import com.set10.core.PathFinder.Node;
 
 import imgui.ImGui;
-import imgui.ImVec4;
 import imgui.app.Application;
 import imgui.app.Configuration;
-import imgui.flag.ImGuiCol;
 import imgui.type.ImString;
 
 public class DebugView extends Application {
@@ -35,10 +26,10 @@ public class DebugView extends Application {
     private Integer selectedUserID = null;
     private String selectedUserName = null;
 
-    private ImString imFromStop = new ImString();
-    private String fromStop = "";
-    private ImString imToStop = new ImString();
-    private String toStop = "";
+    private String fromStop = "halden bussterminal";
+    private ImString imFromStop = new ImString(fromStop);
+    private String toStop = "kommandantveien";
+    private ImString imToStop = new ImString(toStop);
 
     private Trip tempTrip = null;
 
@@ -58,28 +49,30 @@ public class DebugView extends Application {
     public void process() {
         ImGui.begin("Debug menu");
         
-        
-        ImGui.beginChild("DataView", 500, 500);
-        if(ImGui.button("save Data")){
-            try{datarepository.saveToDisk();}
-            catch(Exception e){
-                System.err.println("[ERROR] Can't save to disk ->" + e);
+        { // Menu for data loading/saving/generating
+            ImGui.beginChild("DataView", 500, 500);
+            if(ImGui.button("save Data")){
+                try{datarepository.saveToDisk();}
+                catch(Exception e){
+                    System.err.println("[ERROR] Can't save to disk ->" + e);
+                }
             }
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Load Data")){
-            try{datarepository.loadFromDisk();}
-            catch(Exception e){
-                System.err.println("[ERROR] Can't load from disk ->" + e);
+            ImGui.sameLine();
+            if(ImGui.button("Load Data")){
+                try{datarepository.loadFromDisk();}
+                catch(Exception e){
+                    System.err.println("[ERROR] Can't load from disk ->" + e);
+                }
             }
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Generate dummydata")){
-            datarepository.generateDummyData();
+            ImGui.sameLine();
+            if(ImGui.button("Generate dummydata")){
+                datarepository.generateDummyData();
+            }
         }
 
         ImGui.separatorText("Data");
-        // Ruter
+        
+        // Overview of Routes in repository
         if (ImGui.collapsingHeader("Routes")) {
             ImGui.separator();
             for (Route route : datarepository.getAllRoutes()) {
@@ -97,7 +90,7 @@ public class DebugView extends Application {
             }
         }
 
-        // Stoppesteder
+        // Overview of Stops in repository
         if (ImGui.collapsingHeader("Stops")) {
             ImGui.separator();
             for (Stop stop : datarepository.getAllStops()) {
@@ -118,8 +111,9 @@ public class DebugView extends Application {
                 ImGui.separator();
             }
         }
-        // Billetter
-        if (ImGui.collapsingHeader("Billetter")) {
+
+        // Overview of Tickets in repository
+        if (ImGui.collapsingHeader("Tickets")) {
             ImGui.separator();
             if (datarepository.getallTickets().size() == 0){
                 ImGui.text("No tickets.");
@@ -134,9 +128,12 @@ public class DebugView extends Application {
         ImGui.endChild();
         ImGui.sameLine();
 
+        // Segment dealing with actions similar to what users should be able to take
+        // Tickets, finding trips/routes
         ImGui.beginChild("##UserActions");
         ImGui.setNextItemWidth(220);
-        // Velger bruker
+
+        // Button for selecting Users to interact with
         if (ImGui.beginCombo("##userCombo" , selectedUserName == null ? "Select User" : selectedUserName)) {
 
             for (UserDTO user : userDataService.getUserList(true)) {
@@ -159,8 +156,8 @@ public class DebugView extends Application {
         ImGui.text(selectedUserID != null ? "Logged in as: " + selectedUserName : "Not logged in");
 
         if (selectedUserID != null) {
-            
-            // Finne en reise med to strenger. Kan bare velge mellom stoppene kanskje
+            // Find route by typing in stop names.
+            // TODO: should use fuzzy-search
             ImGui.separatorText("Trip");
             {
                 if(ImGui.inputText("From", imFromStop)){
@@ -195,11 +192,11 @@ public class DebugView extends Application {
                 if(ImGui.button("Activate trip")){
                     userDataService.setUserActiveTrip(tempTrip, selectedUserID);
                 }
-                
-
             }else{
                 ImGui.textDisabled("No trip");
             }
+
+            
             Trip userTrip = userDataService.getUserActiveTrip(selectedUserID);
             if (userTrip != null){
                 if(ImGui.collapsingHeader("Current trip: Show stops")){
@@ -213,14 +210,16 @@ public class DebugView extends Application {
             
             // Gi en billett som gjelder sonene for reisen
             ImGui.separatorText("Ticket");
-            if(tempTrip != null){
+            if(userTrip != null){
                 if(ImGui.button("Give user valid ticket for trip.")){
+                    userDataService.giveUserTicketForTrip(selectedUserID,Ticket.Type.Single, tempTrip);
 
                 }
 
             }else{
                 ImGui.textDisabled("Give user valid ticket for trip.");
             }
+
             User user = datarepository.getUser(selectedUserID);
             for(Ticket ticket : user.activeTickets){
                 ImGui.bullet();
@@ -232,11 +231,8 @@ public class DebugView extends Application {
                 ImGui.sameLine();
                 ImGui.textColored(255,0,0,255, ticket.toString());
             }
-
         }
         ImGui.endChild();
-
-        
         ImGui.end();
     }
 
@@ -246,13 +242,7 @@ public class DebugView extends Application {
 
     @Override
     protected void preRun(){
-        String teststr = "test";
-        // ImString test = new ImString("test");   
-        // if(test.)
+        tripCallback();
     }
     
-    // // Starter bare applikasjonen. Burde kanskje ikke røres
-    // public static void run(DebugView debugView) {
-    //     launch(debugView);
-    // }
 }

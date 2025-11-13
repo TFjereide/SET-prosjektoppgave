@@ -1,8 +1,11 @@
 package com.set10.core;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.set10.core.interfaces.IDataRepository;
 import com.set10.core.interfaces.IDatabase;
@@ -34,8 +37,10 @@ public class DummyDataRepository  implements IDataRepository{
     public void generateDummyData(){
         userCache.clear();
         ticketCache.clear();
+
         stopCache.clear();
         routeCache.clear();
+
         departureCache.clear();
 
         //Brukere
@@ -45,7 +50,15 @@ public class DummyDataRepository  implements IDataRepository{
         createUser(new User("Erika Hansen"));
         createUser(new User("Olga Bentsdotter"));
 
-       //Ruter  
+        var zones = new HashSet<Integer>();
+        zones.add(0);
+        getUser(0).activeTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
+        getUser(0).activeTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
+        getUser(0).oldTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
+        getUser(1).activeTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
+        getUser(2).activeTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
+
+        //Ruter  
         Route r33 = new Route(0);
         createRoute(r33);
         Route r34 = new Route(1);
@@ -225,11 +238,11 @@ public class DummyDataRepository  implements IDataRepository{
 
     public void loadFromDisk() throws Exception{
         RepositoryDataCache cache = database.requestCacheData();
-        stopCache = cache.stops;
-        departureCache = cache.departures;
-        routeCache = cache.routes;
         userCache = cache.users;
         ticketCache = cache.tickets;
+        stopCache = cache.stops;
+        routeCache = cache.routes;
+        departureCache = cache.departures;
     }
 
     // Returnerer id til nylaget objekt 
@@ -328,6 +341,17 @@ public class DummyDataRepository  implements IDataRepository{
 
     public ArrayList<Ticket> getallTickets(){
         return ticketCache;
+    }
+
+    public Ticket createTicket( Ticket.Type type, HashSet<Integer> zones, LocalDateTime fromTime){
+        Ticket ticket = new Ticket(type, fromTime);
+        for(Integer zone : zones){
+            ticket.addZone(zone);
+        }
+        ticket.id = ticketCache.size();
+        ticketCache.add(ticket);
+        return ticket;
+
     }
 
     public ArrayList<User> getAllUsers(){

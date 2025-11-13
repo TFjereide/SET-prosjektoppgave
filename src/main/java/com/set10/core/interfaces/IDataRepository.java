@@ -1,6 +1,8 @@
 package com.set10.core.interfaces;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.set10.core.Departure;
 import com.set10.core.Route;
@@ -46,6 +48,7 @@ public interface IDataRepository {
 
     // Tickets
     public ArrayList<Ticket> getallTickets();
+    public Ticket createTicket(Ticket.Type type, HashSet<Integer> zones, LocalDateTime fromTime);
 
 
 }

@@ -231,6 +231,9 @@ public class PathFinder {
         for(int idx : path.reversed()){
             trip.stops.add(graph.nodes.get(idx).stop);
         }
+        for(Stop stop : trip.stops){
+            trip.zones.add(stop.zone);
+        }
 
         return trip;
     }
