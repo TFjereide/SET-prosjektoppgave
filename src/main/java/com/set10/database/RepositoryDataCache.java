@@ -7,7 +7,6 @@ import com.set10.core.Route;
 import com.set10.core.Stop;
 import com.set10.core.Ticket;
 import com.set10.core.User;
-import com.set10.core.interfaces.IDatabase;
 
 public class RepositoryDataCache {
 

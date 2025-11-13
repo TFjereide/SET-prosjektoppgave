@@ -1,7 +1,5 @@
 package com.set10.core;
 
-import java.nio.file.Path;
-import java.security.PrivateKey;
 import java.util.ArrayList;
 
 import com.set10.core.DTO.DepartureDTO;
