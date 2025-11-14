@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class Test_DummyDataRepository {
+public class Test_DatabaseText {
     
     @Test
     @DisplayName("testSerialiseringOgDeserialisering")

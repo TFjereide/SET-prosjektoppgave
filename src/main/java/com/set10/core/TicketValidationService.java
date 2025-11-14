@@ -2,7 +2,10 @@ package com.set10.core;
 import java.time.LocalDateTime;
 
 
-public class Validation {
+/**
+ * Service for validating tickets -- for now just a static stub
+ */
+public class TicketValidationService {
     
 
     public static boolean isTicketValidTime(Ticket ticket) {

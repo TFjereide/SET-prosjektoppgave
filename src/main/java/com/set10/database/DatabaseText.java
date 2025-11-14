@@ -42,7 +42,7 @@ public class DatabaseText implements IDatabase{
         System.out.println("Writing " + allDepartures.size()+ " departures to textfile");
         for(int i = 0; i < allDepartures.size(); i++){
             Departure avgang = allDepartures.get(i);
-            writer.append("a;" + avgang.id + ";" + avgang.routeID+";" + avgang.stopID+ ";" + avgang.time +"\n");
+            writer.append("a;" + avgang.id + ";" + avgang.routeId+";" + avgang.stopId+ ";" + avgang.time +"\n");
         }
 
         var allStops = cache.stops;

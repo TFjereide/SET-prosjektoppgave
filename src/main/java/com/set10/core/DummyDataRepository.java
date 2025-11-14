@@ -11,7 +11,7 @@ import com.set10.core.interfaces.IDatabase;
 import com.set10.database.RepositoryDataCache;
 
 /**
- * Holder på data som applikasjonen behøver.
+ * Repository holding data that is used in testing the application
  * 
  */
 public class DummyDataRepository  implements IDataRepository{
@@ -28,11 +28,15 @@ public class DummyDataRepository  implements IDataRepository{
 
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
-    // Burde fungere som Init
     public DummyDataRepository(IDatabase database){
         this.database = database;
     }
 
+    /**
+     * Generates usable dummy data to fill everey category/cache
+     * Useful if stored data is corrupted at some point in development, or 
+     * something else has gone wrong. 
+     */
     public void generateDummyData(){
         userCache.clear();
         ticketCache.clear();
@@ -51,6 +55,7 @@ public class DummyDataRepository  implements IDataRepository{
 
         var zones = new HashSet<Integer>();
         zones.add(0);
+
         getUser(0).activeTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
         getUser(0).activeTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
         getUser(0).oldTickets.add(createTicket(Ticket.Type.Single, zones, LocalDateTime.now()));
@@ -193,12 +198,126 @@ public class DummyDataRepository  implements IDataRepository{
         addDepartureToStop(r34.id, 0 ,"05:55","06:55","07:55","08:55","09:55","10:55","11:55","12:55","13:55","14:55","15:55","16:55","17:55","19:55");
         addDepartureToStop(r33.id, 0 ,  "05:40","06:40","07:40","08:40","09:40","10:40","11:40","12:40","13:40","14:40","15:40","16:40","18:10","20:10");
         addDepartureToStop(r35.id, 0 ,  "06:10","07:10","08:10","09:10","10:10","11:10","12:10","13:10","14:10","15:10","16:10","17:10","18:10","19:40");
-        
-
-
+    
          }
 
-    // Avganger burde ligge i ruter, ikke i stopp.
+    //
+    // Serialization
+    //
+        
+    public void saveToDisk() throws Exception{
+        database.dumpDataCache(new RepositoryDataCache(
+                    userCache,
+                    ticketCache,
+                    stopCache,
+                    routeCache,
+                    departureCache
+            )
+        );
+    }
+
+    public void loadFromDisk() throws Exception{
+        RepositoryDataCache cache = database.requestCacheData();
+        userCache = cache.users;
+        ticketCache = cache.tickets;
+        stopCache = cache.stops;
+        routeCache = cache.routes;
+        departureCache = cache.departures;
+    }
+
+    //
+    // User
+    //
+
+    public int createUser(User bruker){
+        userCache.add(bruker);
+        bruker.id = userCache.size()-1;
+        return bruker.id ;
+    }
+
+    public User getUser(int userId){
+        if (userId < userCache.size() && userId >= 0){
+            return userCache.get(userId);
+        }
+        return null;
+    }
+
+    public ArrayList<User> getAllUsers(){
+        return userCache;
+    }
+
+    //
+    // Stops
+    //
+
+    public int createStop(String name, int zone){
+        // TODO: zones aren't defined, and can't be validated at the moment
+        Stop stop = new Stop(name, zone);
+        stop.id = stopCache.size();
+        stopCache.add(stop);
+        return stop.id;
+    }
+
+    public Stop getStop(int stopId){
+        if ( stopId < 0 || stopId > stopCache.size() ){
+            return null;
+        }
+        return stopCache.get(stopId);
+    }
+
+    public Stop getStopByName(String name){
+        //TODO: Could be a hashmap lookup
+        for(Stop stop :stopCache){
+            if (stop.name.equalsIgnoreCase(name)){
+                return stop;
+            }
+        }
+        return null;
+    }
+    
+    public int getStopIDByName(String name){
+        //TODO: Could be a hashmap lookup
+        for(Stop stop : stopCache){
+            if (stop.name.equalsIgnoreCase(name)){
+                return stop.id;
+            }
+        }
+        return -1;
+    }
+    
+    public ArrayList<Stop> getAllStops(){
+        return stopCache;
+    }
+
+    public int createRoute(Route route) {
+        route.id = routeCache.size();
+        routeCache.add(route);
+        System.out.println("created route:"+route.id);
+        return route.id;
+    }
+
+    public Route getRoute(int routeId) {
+        if ( routeId < 0 || routeId > routeCache.size() ){
+            return null;
+        }
+        return routeCache.get(routeId);
+    }
+    
+    public ArrayList<Route> getAllRoutes(){
+        return routeCache;
+    }
+
+    //
+    // Departures
+    // 
+    
+    public int createDeparture(Departure departure){
+        departureCache.add(departure);
+        departure.id = departureCache.size()-1;
+        return departure.id;
+    }
+    
+    // TODO: departures should probably be stored/associated with a route, not a stop
     public void addDepartureToStop(int ruteID, int stoppID, String... tider) {
         Stop stop = getStop(stoppID);
         if (stop == null) {
@@ -223,126 +342,47 @@ public class DummyDataRepository  implements IDataRepository{
             departureCache.add(avg); 
         }
     }
-
-    public void saveToDisk() throws Exception{
-        database.dumpDataCache(new RepositoryDataCache(
-                    userCache,
-                    ticketCache,
-                    stopCache,
-                    routeCache,
-                    departureCache
-            )
-        );
-    }
-
-    public void loadFromDisk() throws Exception{
-        RepositoryDataCache cache = database.requestCacheData();
-        userCache = cache.users;
-        ticketCache = cache.tickets;
-        stopCache = cache.stops;
-        routeCache = cache.routes;
-        departureCache = cache.departures;
-    }
-
-    // Returnerer id til nylaget objekt 
-    public int createUser(User bruker){
-        userCache.add(bruker);
-        bruker.id = userCache.size()-1;
-        return bruker.id ;
-    }
-
-    public User getUser(int id){
-        return 
-        userCache.get(id);
-    }
-
-    public ArrayList<User> getUsers(){
-        return userCache;
-    }
-
-    // Returnerer id til nylaget objekt 
-    public int createStop(String name, int zone){
-        Stop stop = new Stop(name, zone);
-        stop.id = stopCache.size();
-        stopCache.add(stop);
-        return stop.id;
-    }
-
-    public Stop getStop(int id){
-        return stopCache.get(id);
-    }
-
-    public Stop getStop(String name){
-        for(Stop stop :stopCache){
-            if (stop.name.equalsIgnoreCase(name)){
-                return stop;
-            }
-        }
-        return null;
-    }
-    //TODO: Could be a hashmap
-    public int getStopID(String name){
-        for(Stop stop : stopCache){
-            if (stop.name.equalsIgnoreCase(name)){
-                return stop.id;
-            }
-        }
-        return -1;
-    }
-    
-    public ArrayList<Stop> getAllStops(){
-        return stopCache;
-    }
-
-    public int createRoute(Route route) {
-        route.id = routeCache.size();
-        routeCache.add(route);
-        System.out.println("created route:"+route.id);
-        return route.id;
-    }
-
-    public Route getRoute(int id) {
-        for (Route r : routeCache) {
-            if (r.id == id) {
-                return r;
-            }
-        }
-        return null;
-    }
-    
-    public ArrayList<Route> getAllRoutes(){
-        return routeCache;
-    }
-
-    // Returnerer id til nylaget objekt 
-    public int createDeparture(Departure departure){
-        departureCache.add(departure);
-        departure.id = departureCache.size()-1;
-        return departure.id;
-    }
-    
     
     public ArrayList<Departure> getRouteDeparturesForStop(int routeID, int stopID) {
         ArrayList<Departure> departures = new ArrayList<>();
         Stop stop = stopCache.get(stopID);
         for(Departure departure : stop.departures){
-            if (departure.routeID == routeID){
+            if (departure.routeId == routeID){
                 departures.add(departure);
             }
         }
         return departures;
     }
     
-    
     public ArrayList<Departure> getAllDepartures() {
         return departureCache;
     }
 
-    public ArrayList<Ticket> getallTickets(){
-        return ticketCache;
+    //
+    // Tickets
+    //
+
+    public Ticket getTicket(int ticketId){
+        if ( ticketId < 0 || ticketId > ticketCache.size() ){
+            System.err.println("There is no ticket with id="+ticketId);
+            return null;
+        }
+        return ticketCache.get(ticketId);
     }
 
+    /**
+     * Creates, stores and returns a ticket.
+     * @param type      type of ticket (periodic, single trip etc.)
+     * @param zones     list of zones the ticket should be valid for.
+     * @param fromTime  time in which the ticket was activated.
+     * @return  the created ticket
+     * @see Ticket.Type
+     */
     public Ticket createTicket( Ticket.Type type, HashSet<Integer> zones, LocalDateTime fromTime){
+        if (zones.size() == 0){
+            System.err.println("cannot create ticket: please provide valid zones!");
+            return null;
+        }
         Ticket ticket = new Ticket(type, fromTime);
         for(Integer zone : zones){
             ticket.addZone(zone);
@@ -353,8 +393,8 @@ public class DummyDataRepository  implements IDataRepository{
 
     }
 
-    public ArrayList<User> getAllUsers(){
-        return userCache;
+    public ArrayList<Ticket> getallTickets(){
+        return ticketCache;
     }
-
+    
 }

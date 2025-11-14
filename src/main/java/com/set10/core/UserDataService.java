@@ -6,16 +6,19 @@ import java.util.ArrayList;
 import com.set10.core.DTO.UserDTO;
 import com.set10.core.interfaces.IDataRepository;
 
+/**
+ * Stores and handles data related to users. 
+ * Provides the API to interact with relevant stored data.
+ */
 public class UserDataService {
     private IDataRepository dataRepository;
-    
     
     public UserDataService(IDataRepository dataRepository){
         this.dataRepository = dataRepository;
     }
 
-    public boolean setUserActiveTrip(Trip trip, int userId){
-        // TODO: Validate
+    
+    public boolean setUserActiveTrip(Trip trip, int userId){    
         User user = dataRepository.getUser(userId);
         if (user == null){
             System.err.println("Could not get User by id=" + userId);

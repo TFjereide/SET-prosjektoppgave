@@ -16,6 +16,11 @@ import imgui.app.Application;
 import imgui.app.Configuration;
 import imgui.type.ImString;
 
+
+/**
+ * As it says on the tin. A debug view/gui for the application using the ImGui library.
+ * A way to quickly get an application up and running - disposable and unopinionated on core logic implementation.
+ */
 public class DebugView extends Application {
 
     NavigationService navigationService;
@@ -23,7 +28,7 @@ public class DebugView extends Application {
     DummyDataRepository datarepository;
     
     // interaction data
-    private Integer selectedUserID = null;
+    private Integer selectedUserId = null;
     private String selectedUserName = null;
 
     private String fromStop = "halden bussterminal";
@@ -44,7 +49,7 @@ public class DebugView extends Application {
         config.setTitle("Østfold trafikk premium");
     }
 
-    // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
+    // Called every rendered frame, runs at aproximately 60hz
     @Override
     public void process() {
         ImGui.begin("Debug menu");
@@ -99,7 +104,7 @@ public class DebugView extends Application {
                         Route route = datarepository.getRoute(routeID);
                         if (ImGui.treeNode("Route: " + route.id +" - "+ stop.departures.size() + " departure(s)")){
                             for (Departure departure : stop.departures) {
-                                if (departure.routeID == route.id) {
+                                if (departure.routeId == route.id) {
                                     ImGui.text("Departure: " + departure.time);
                                 }
                             }
@@ -139,10 +144,10 @@ public class DebugView extends Application {
             for (UserDTO user : userDataService.getUserList(true)) {
         
                 String name = user.name();  
-                boolean selected = (selectedUserID != null && selectedUserID == user.id());
+                boolean selected = (selectedUserId != null && selectedUserId == user.id());
 
                 if (ImGui.selectable(name, selected)) {
-                    selectedUserID = user.id();
+                    selectedUserId = user.id();
                     selectedUserName = name;
                 }
 
@@ -153,11 +158,11 @@ public class DebugView extends Application {
 
         }
         ImGui.sameLine();
-        ImGui.text(selectedUserID != null ? "Logged in as: " + selectedUserName : "Not logged in");
+        ImGui.text(selectedUserId != null ? "Logged in as: " + selectedUserName : "Not logged in");
 
-        if (selectedUserID != null) {
+        if (selectedUserId != null) {
             // Find route by typing in stop names.
-            // TODO: should use fuzzy-search
+            // TODO: should probably use fuzzy-search
             ImGui.separatorText("Trip");
             {
                 if(ImGui.inputText("From", imFromStop)){
@@ -190,14 +195,14 @@ public class DebugView extends Application {
                 ImGui.textColored(0, 255, 0, 255,"Found trip!");
                 
                 if(ImGui.button("Activate trip")){
-                    userDataService.setUserActiveTrip(tempTrip, selectedUserID);
+                    userDataService.setUserActiveTrip(tempTrip, selectedUserId);
                 }
             }else{
                 ImGui.textDisabled("No trip");
             }
 
             
-            Trip userTrip = userDataService.getUserActiveTrip(selectedUserID);
+            Trip userTrip = userDataService.getUserActiveTrip(selectedUserId);
             if (userTrip != null){
                 if(ImGui.collapsingHeader("Current trip: Show stops")){
                     int i = 1;
@@ -212,7 +217,7 @@ public class DebugView extends Application {
             ImGui.separatorText("Ticket");
             if(userTrip != null){
                 if(ImGui.button("Give user valid ticket for trip.")){
-                    userDataService.giveUserTicketForTrip(selectedUserID,Ticket.Type.Single, tempTrip);
+                    userDataService.giveUserTicketForTrip(selectedUserId,Ticket.Type.Single, tempTrip);
 
                 }
 
@@ -220,7 +225,7 @@ public class DebugView extends Application {
                 ImGui.textDisabled("Give user valid ticket for trip.");
             }
 
-            User user = datarepository.getUser(selectedUserID);
+            User user = datarepository.getUser(selectedUserId);
             for(Ticket ticket : user.activeTickets){
                 ImGui.bullet();
                 ImGui.sameLine();

@@ -7,6 +7,6 @@ import com.set10.core.Departure;
 public record DepartureDTO(int id, int routeID, int stopID, LocalTime time) {
     
     public DepartureDTO(Departure departure){
-        this(departure.id, departure.routeID, departure.stopID, departure.time);
+        this(departure.id, departure.routeId, departure.stopId, departure.time);
     }
 }

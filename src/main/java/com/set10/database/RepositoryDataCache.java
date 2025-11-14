@@ -8,6 +8,10 @@ import com.set10.core.Stop;
 import com.set10.core.Ticket;
 import com.set10.core.User;
 
+/**
+ * Cache of data used to transfer between services
+ * Provides a layer of indirection.
+ */
 public class RepositoryDataCache {
 
     public ArrayList<User> users = new ArrayList<>(); 
