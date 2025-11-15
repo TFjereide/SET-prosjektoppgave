@@ -345,6 +345,9 @@ public class DummyDataRepository  implements IDataRepository{
     
     public ArrayList<Departure> getRouteDeparturesForStop(int routeID, int stopID) {
         ArrayList<Departure> departures = new ArrayList<>();
+        if(routeID < 0 || routeID >= routeCache.size() || stopID < 0 || stopID> stopCache.size()){
+            return departures;
+        }
         Stop stop = stopCache.get(stopID);
         for(Departure departure : stop.departures){
             if (departure.routeId == routeID){

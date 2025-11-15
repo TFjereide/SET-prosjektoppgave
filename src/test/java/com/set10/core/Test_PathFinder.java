@@ -53,7 +53,6 @@ public class Test_PathFinder {
 
         pathfinder = new PathFinder();
         graph = pathfinder.buildNodeGraph(repo);
-        graph.print();
     }
 
     @AfterEach
