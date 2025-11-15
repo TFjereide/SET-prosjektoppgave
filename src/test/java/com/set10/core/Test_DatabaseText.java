@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class Test_DummyDataRepository {
+public class Test_DatabaseText {
     
     @Test
     @DisplayName("testSerialiseringOgDeserialisering")
     void testSerialiseringOgDeserialisering(){
-        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        DatabaseText dbt = new DatabaseText("data/testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt);
         depot.generateDummyData();
         assertDoesNotThrow(depot::saveToDisk);
@@ -26,7 +26,7 @@ public class Test_DummyDataRepository {
     @Test
     @DisplayName("serialiseringsintegritet for brukere")
     void testBrukerSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        DatabaseText dbt = new DatabaseText("data/testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -54,7 +54,7 @@ public class Test_DummyDataRepository {
     @Test
     @DisplayName("serialiseringsintegritet for Billetter")
     void testBillettSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        DatabaseText dbt = new DatabaseText("data∕testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -72,17 +72,17 @@ public class Test_DummyDataRepository {
 
         assertEquals(depot.ticketCache.size(), depot2.ticketCache.size());
         
-        for(int i = 0; i< depot.ticketCache.size(); i++){
+        for(int i = 0; i < depot.ticketCache.size(); i++){
             Ticket b1 = depot.ticketCache.get(i);
             Ticket b2 = depot2.ticketCache.get(i);
-            assertEquals(b1.id, b2.id);
+            assertEquals(b1.id, b2.id, "Deserialized ticket id="+b2.id+" does not match id="+b1.id);
         }
     }
 
     @Test
     @DisplayName("serialiseringsintegritet for stoppested")
     void testStoppestedSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        DatabaseText dbt = new DatabaseText("data/testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -113,7 +113,7 @@ public class Test_DummyDataRepository {
     @Test
     @DisplayName("serialiseringsintegritet for stoppested")
     void testRuterSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        DatabaseText dbt = new DatabaseText("data/testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -140,7 +140,7 @@ public class Test_DummyDataRepository {
     @Test
     @DisplayName("serialiseringsintegritet for avganger")
     void testAvgangSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data\\testdata.txt");
+        DatabaseText dbt = new DatabaseText("data/testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 

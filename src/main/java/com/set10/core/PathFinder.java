@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import com.set10.core.interfaces.IDataRepository;
 
@@ -230,6 +228,9 @@ public class PathFinder {
         //Convert to stops
         for(int idx : path.reversed()){
             trip.stops.add(graph.nodes.get(idx).stop);
+        }
+        for(Stop stop : trip.stops){
+            trip.zones.add(stop.zone);
         }
 
         return trip;

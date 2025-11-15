@@ -1,28 +1,46 @@
 package com.set10.core;
 
-import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import com.set10.core.DTO.UserDTO;
 import com.set10.core.interfaces.IDataRepository;
 
+/**
+ * Stores and handles data related to users. 
+ * Provides the API to interact with relevant stored data.
+ */
 public class UserDataService {
     private IDataRepository dataRepository;
-    
     
     public UserDataService(IDataRepository dataRepository){
         this.dataRepository = dataRepository;
     }
 
-    public boolean setUserActiveTrip(Trip trip, int userId){
-        // TODO: Validate
+    
+    public boolean setUserActiveTrip(Trip trip, int userId){    
         User user = dataRepository.getUser(userId);
+        if (user == null){
+            System.err.println("Could not get User by id=" + userId);
+            return false;
+        }
         user.activeTrip = trip;
         return true;
     }
     
     public Trip getUserActiveTrip(int userId){
         return dataRepository.getUser(userId).activeTrip;
+    }
+
+    public Ticket giveUserTicketForTrip(int selectedUserID, Ticket.Type type, Trip trip){
+        User user = dataRepository.getUser(selectedUserID);
+        if (user == null){
+            System.err.println("Could not get User by id=" + selectedUserID);
+            return null;
+        }
+        Ticket ticket = dataRepository.createTicket(type, trip.zones, LocalDateTime.now());
+        user.activeTickets.add(ticket);
+        return ticket;
     }
 
     // TODO: use DTO

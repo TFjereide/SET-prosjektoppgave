@@ -1,6 +1,8 @@
 package com.set10.core.interfaces;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.set10.core.Departure;
 import com.set10.core.Route;
@@ -8,6 +10,10 @@ import com.set10.core.Stop;
 import com.set10.core.Ticket;
 import com.set10.core.User;
 
+/**
+ * Guarrantees an API that lets you get data from an undisclosed source.
+ * Must remain stable over time to ensure sane development.
+ */
 public interface IDataRepository {
 
     // Users
@@ -22,18 +28,18 @@ public interface IDataRepository {
     
     public Stop getStop(int id);
     
-    public Stop getStop(String name);
+    public Stop getStopByName(String name);
     
-    public int getStopID(String name);
+    public int getStopIDByName(String name);
     
     public ArrayList<Stop> getAllStops();
 
     // Departures
-    public void addDepartureToStop(int ruteID, int stoppID, String... tider);
-    
     public int createDeparture(Departure departure);
+    
+    public void addDepartureToStop(int routeId, int stopId, String... departureTimes);
 
-    public ArrayList<Departure> getRouteDeparturesForStop(int routeID, int stopID);
+    public ArrayList<Departure> getRouteDeparturesForStop(int routeId, int stopId);
     
     public ArrayList<Departure> getAllDepartures();
 
@@ -45,7 +51,10 @@ public interface IDataRepository {
     public ArrayList<Route> getAllRoutes();
 
     // Tickets
+    public Ticket createTicket(Ticket.Type type, HashSet<Integer> zones, LocalDateTime fromTime);
+    
+    public Ticket getTicket(int ticketId);
+    
     public ArrayList<Ticket> getallTickets();
-
 
 }

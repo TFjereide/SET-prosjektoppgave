@@ -45,7 +45,7 @@ public class Test_PathFinder {
         
         stopId = repo.createStop("start 2",0); 
         repo.addDepartureToStop(routeId1, stopId ,  "01:05");
-        repo.addDepartureToStop(routeId1, repo.getStopID("C") ,  "01:06");
+        repo.addDepartureToStop(routeId1, repo.getStopIDByName("C") ,  "01:06");
         stopId = repo.createStop("D",0); 
         repo.addDepartureToStop(routeId1, stopId ,  "01:07");
         stopId = repo.createStop("end 2",0); 
@@ -82,29 +82,29 @@ public class Test_PathFinder {
         
         assertEquals(true, graph.nodes.size() > 0, "The nodegraph was not initialized!");
         {
-            int id1 = repo.getStopID("start 1");
-            int id2 = repo.getStopID("A");
+            int id1 = repo.getStopIDByName("start 1");
+            int id2 = repo.getStopIDByName("A");
             PathFinder.Node node1 = graph.getNodeByItemId(id1);
             int node2id = graph.getNodeId(id2);
             assertEquals(true, node1.hasEdge(node2id)); 
         }
         {
-            int id1 = repo.getStopID("start 2");
-            int id2 = repo.getStopID("C");
+            int id1 = repo.getStopIDByName("start 2");
+            int id2 = repo.getStopIDByName("C");
             PathFinder.Node node1 = graph.getNodeByItemId(id1);
             int node2id = graph.getNodeId(id2);
             assertEquals(true, node1.hasEdge(node2id)); 
         }
         {
-            int id1 = repo.getStopID("C");
-            int id2 = repo.getStopID("D");
+            int id1 = repo.getStopIDByName("C");
+            int id2 = repo.getStopIDByName("D");
             PathFinder.Node node1 = graph.getNodeByItemId(id1);
             int node2id = graph.getNodeId(id2);
             assertEquals(true, node1.hasEdge(node2id)); 
         }
         {
-            int id1 = repo.getStopID("start 1");
-            int id2 = repo.getStopID("end 2");
+            int id1 = repo.getStopIDByName("start 1");
+            int id2 = repo.getStopIDByName("end 2");
             PathFinder.Node node1 = graph.getNodeByItemId(id1);
             int node2id = graph.getNodeId(id2);
             assertEquals(false, node1.hasEdge(node2id)); 
@@ -116,39 +116,39 @@ public class Test_PathFinder {
     public void TestCalculatePath(){
         
         {
-            int start = repo.getStopID("start 1");
+            int start = repo.getStopIDByName("start 1");
             assertEquals(false, start == -1);
 
-            int end = repo.getStopID("end 1");
+            int end = repo.getStopIDByName("end 1");
             assertEquals(false, end == -1);
 
             Trip trip1 = pathfinder.calculatePath(graph, start, end);
 
             ArrayList<Stop> targetStops = new ArrayList<>();
-            targetStops.add(repo.getStop("start 1"));
-            targetStops.add(repo.getStop("A"));
-            targetStops.add(repo.getStop("B"));
-            targetStops.add(repo.getStop("C"));
-            targetStops.add(repo.getStop("end 1"));
+            targetStops.add(repo.getStopByName("start 1"));
+            targetStops.add(repo.getStopByName("A"));
+            targetStops.add(repo.getStopByName("B"));
+            targetStops.add(repo.getStopByName("C"));
+            targetStops.add(repo.getStopByName("end 1"));
 
             assertEquals(false, trip1 == null);
             assertArrayEquals(targetStops.toArray(), trip1.stops.toArray());
         }
 
         {
-            int start = repo.getStopID("start 2");
+            int start = repo.getStopIDByName("start 2");
             assertEquals(false, start == -1);
 
-            int end = repo.getStopID("end 2");
+            int end = repo.getStopIDByName("end 2");
             assertEquals(false, end == -1);
 
             Trip trip1 = pathfinder.calculatePath(graph, start, end);
 
             ArrayList<Stop> targetStops = new ArrayList<>();
-            targetStops.add(repo.getStop("start 2"));
-            targetStops.add(repo.getStop("C"));
-            targetStops.add(repo.getStop("D"));
-            targetStops.add(repo.getStop("end 2"));
+            targetStops.add(repo.getStopByName("start 2"));
+            targetStops.add(repo.getStopByName("C"));
+            targetStops.add(repo.getStopByName("D"));
+            targetStops.add(repo.getStopByName("end 2"));
 
             assertEquals(false, trip1 == null);
             assertArrayEquals(targetStops.toArray(), trip1.stops.toArray());
@@ -160,10 +160,10 @@ public class Test_PathFinder {
     public void TestCalculateImpossiblePath(){
         
         {
-            int start = repo.getStopID("end 2");
+            int start = repo.getStopIDByName("end 2");
             assertEquals(false, start == -1);
 
-            int end = repo.getStopID("start 2");
+            int end = repo.getStopIDByName("start 2");
             assertEquals(false, end == -1);
 
             Trip trip1 = pathfinder.calculatePath(graph, start, end);
@@ -171,10 +171,10 @@ public class Test_PathFinder {
         }
 
         {
-            int start = repo.getStopID("C");
+            int start = repo.getStopIDByName("C");
             assertEquals(false, start == -1);
 
-            int end = repo.getStopID("A");
+            int end = repo.getStopIDByName("A");
             assertEquals(false, end == -1);
 
             Trip trip1 = pathfinder.calculatePath(graph, start, end);
@@ -188,20 +188,20 @@ public class Test_PathFinder {
     public void TestCalculateNoLengthPath(){
         
         {
-            int start = repo.getStopID("A");
+            int start = repo.getStopIDByName("A");
             assertEquals(false, start == -1);
 
-            int end = repo.getStopID("A");
+            int end = repo.getStopIDByName("A");
             assertEquals(false, end == -1);
 
             Trip trip1 = pathfinder.calculatePath(graph, start, end);
             assertEquals(true, trip1 == null);
         }
         {
-            int start = repo.getStopID("B");
+            int start = repo.getStopIDByName("B");
             assertEquals(false, start == -1);
 
-            int end = repo.getStopID("B");
+            int end = repo.getStopIDByName("B");
             assertEquals(false, end == -1);
 
             Trip trip1 = pathfinder.calculatePath(graph, start, end);

@@ -1,7 +1,5 @@
 package com.set10.application;
 
-import com.set10.database.DatabaseText;
-
 import com.set10.core.NavigationService;
 import com.set10.core.Stop;
 import com.set10.core.Route;
@@ -11,20 +9,18 @@ import com.set10.core.Ticket;
 import com.set10.core.Trip;
 import com.set10.core.User;
 import com.set10.core.UserDataService;
-import com.set10.core.DTO.DepartureDTO;
-import com.set10.core.DTO.RouteDTO;
-import com.set10.core.DTO.StopDTO;
 import com.set10.core.DTO.UserDTO;
-import com.set10.core.PathFinder.NodeGraph;
-import com.set10.core.PathFinder.Node;
 
 import imgui.ImGui;
-import imgui.ImVec4;
 import imgui.app.Application;
 import imgui.app.Configuration;
-import imgui.flag.ImGuiCol;
 import imgui.type.ImString;
 
+
+/**
+ * As it says on the tin. A debug view/gui for the application using the ImGui library.
+ * A way to quickly get an application up and running - disposable and unopinionated on core logic implementation.
+ */
 public class DebugView extends Application {
 
     NavigationService navigationService;
@@ -32,13 +28,13 @@ public class DebugView extends Application {
     DummyDataRepository datarepository;
     
     // interaction data
-    private Integer selectedUserID = null;
+    private Integer selectedUserId = null;
     private String selectedUserName = null;
 
-    private ImString imFromStop = new ImString();
-    private String fromStop = "";
-    private ImString imToStop = new ImString();
-    private String toStop = "";
+    private String fromStop = "halden bussterminal";
+    private ImString imFromStop = new ImString(fromStop);
+    private String toStop = "kommandantveien";
+    private ImString imToStop = new ImString(toStop);
 
     private Trip tempTrip = null;
 
@@ -53,33 +49,35 @@ public class DebugView extends Application {
         config.setTitle("Østfold trafikk premium");
     }
 
-    // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
+    // Called every rendered frame, runs at aproximately 60hz
     @Override
     public void process() {
         ImGui.begin("Debug menu");
         
-        
-        ImGui.beginChild("DataView", 500, 500);
-        if(ImGui.button("save Data")){
-            try{datarepository.saveToDisk();}
-            catch(Exception e){
-                System.err.println("[ERROR] Can't save to disk ->" + e);
+        { // Menu for data loading/saving/generating
+            ImGui.beginChild("DataView", 500, 500);
+            if(ImGui.button("save Data")){
+                try{datarepository.saveToDisk();}
+                catch(Exception e){
+                    System.err.println("[ERROR] Can't save to disk ->" + e);
+                }
             }
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Load Data")){
-            try{datarepository.loadFromDisk();}
-            catch(Exception e){
-                System.err.println("[ERROR] Can't load from disk ->" + e);
+            ImGui.sameLine();
+            if(ImGui.button("Load Data")){
+                try{datarepository.loadFromDisk();}
+                catch(Exception e){
+                    System.err.println("[ERROR] Can't load from disk ->" + e);
+                }
             }
-        }
-        ImGui.sameLine();
-        if(ImGui.button("Generate dummydata")){
-            datarepository.generateDummyData();
+            ImGui.sameLine();
+            if(ImGui.button("Generate dummydata")){
+                datarepository.generateDummyData();
+            }
         }
 
         ImGui.separatorText("Data");
-        // Ruter
+        
+        // Overview of Routes in repository
         if (ImGui.collapsingHeader("Routes")) {
             ImGui.separator();
             for (Route route : datarepository.getAllRoutes()) {
@@ -97,7 +95,7 @@ public class DebugView extends Application {
             }
         }
 
-        // Stoppesteder
+        // Overview of Stops in repository
         if (ImGui.collapsingHeader("Stops")) {
             ImGui.separator();
             for (Stop stop : datarepository.getAllStops()) {
@@ -106,7 +104,7 @@ public class DebugView extends Application {
                         Route route = datarepository.getRoute(routeID);
                         if (ImGui.treeNode("Route: " + route.id +" - "+ stop.departures.size() + " departure(s)")){
                             for (Departure departure : stop.departures) {
-                                if (departure.routeID == route.id) {
+                                if (departure.routeId == route.id) {
                                     ImGui.text("Departure: " + departure.time);
                                 }
                             }
@@ -118,8 +116,9 @@ public class DebugView extends Application {
                 ImGui.separator();
             }
         }
-        // Billetter
-        if (ImGui.collapsingHeader("Billetter")) {
+
+        // Overview of Tickets in repository
+        if (ImGui.collapsingHeader("Tickets")) {
             ImGui.separator();
             if (datarepository.getallTickets().size() == 0){
                 ImGui.text("No tickets.");
@@ -134,18 +133,21 @@ public class DebugView extends Application {
         ImGui.endChild();
         ImGui.sameLine();
 
+        // Segment dealing with actions similar to what users should be able to take
+        // Tickets, finding trips/routes
         ImGui.beginChild("##UserActions");
         ImGui.setNextItemWidth(220);
-        // Velger bruker
+
+        // Button for selecting Users to interact with
         if (ImGui.beginCombo("##userCombo" , selectedUserName == null ? "Select User" : selectedUserName)) {
 
             for (UserDTO user : userDataService.getUserList(true)) {
         
                 String name = user.name();  
-                boolean selected = (selectedUserID != null && selectedUserID == user.id());
+                boolean selected = (selectedUserId != null && selectedUserId == user.id());
 
                 if (ImGui.selectable(name, selected)) {
-                    selectedUserID = user.id();
+                    selectedUserId = user.id();
                     selectedUserName = name;
                 }
 
@@ -156,11 +158,11 @@ public class DebugView extends Application {
 
         }
         ImGui.sameLine();
-        ImGui.text(selectedUserID != null ? "Logged in as: " + selectedUserName : "Not logged in");
+        ImGui.text(selectedUserId != null ? "Logged in as: " + selectedUserName : "Not logged in");
 
-        if (selectedUserID != null) {
-            
-            // Finne en reise med to strenger. Kan bare velge mellom stoppene kanskje
+        if (selectedUserId != null) {
+            // Find route by typing in stop names.
+            // TODO: should probably use fuzzy-search
             ImGui.separatorText("Trip");
             {
                 if(ImGui.inputText("From", imFromStop)){
@@ -193,14 +195,14 @@ public class DebugView extends Application {
                 ImGui.textColored(0, 255, 0, 255,"Found trip!");
                 
                 if(ImGui.button("Activate trip")){
-                    userDataService.setUserActiveTrip(tempTrip, selectedUserID);
+                    userDataService.setUserActiveTrip(tempTrip, selectedUserId);
                 }
-                
-
             }else{
                 ImGui.textDisabled("No trip");
             }
-            Trip userTrip = userDataService.getUserActiveTrip(selectedUserID);
+
+            
+            Trip userTrip = userDataService.getUserActiveTrip(selectedUserId);
             if (userTrip != null){
                 if(ImGui.collapsingHeader("Current trip: Show stops")){
                     int i = 1;
@@ -213,15 +215,17 @@ public class DebugView extends Application {
             
             // Gi en billett som gjelder sonene for reisen
             ImGui.separatorText("Ticket");
-            if(tempTrip != null){
+            if(userTrip != null){
                 if(ImGui.button("Give user valid ticket for trip.")){
+                    userDataService.giveUserTicketForTrip(selectedUserId,Ticket.Type.Single, tempTrip);
 
                 }
 
             }else{
                 ImGui.textDisabled("Give user valid ticket for trip.");
             }
-            User user = datarepository.getUser(selectedUserID);
+
+            User user = datarepository.getUser(selectedUserId);
             for(Ticket ticket : user.activeTickets){
                 ImGui.bullet();
                 ImGui.sameLine();
@@ -232,11 +236,8 @@ public class DebugView extends Application {
                 ImGui.sameLine();
                 ImGui.textColored(255,0,0,255, ticket.toString());
             }
-
         }
         ImGui.endChild();
-
-        
         ImGui.end();
     }
 
@@ -246,13 +247,7 @@ public class DebugView extends Application {
 
     @Override
     protected void preRun(){
-        String teststr = "test";
-        // ImString test = new ImString("test");   
-        // if(test.)
+        tripCallback();
     }
     
-    // // Starter bare applikasjonen. Burde kanskje ikke røres
-    // public static void run(DebugView debugView) {
-    //     launch(debugView);
-    // }
 }

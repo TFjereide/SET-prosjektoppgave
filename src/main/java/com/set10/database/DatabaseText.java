@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.set10.core.Route;
@@ -25,7 +26,7 @@ import com.set10.core.interfaces.IDatabase;
 */
 
 public class DatabaseText implements IDatabase{
-    String path = "data\\data.txt";
+    String path = "data/data.txt";
 
     public DatabaseText(){
     }
@@ -38,12 +39,14 @@ public class DatabaseText implements IDatabase{
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         
         var allDepartures = cache.departures;
+        System.out.println("Writing " + allDepartures.size()+ " departures to textfile");
         for(int i = 0; i < allDepartures.size(); i++){
             Departure avgang = allDepartures.get(i);
-            writer.append("a;" + avgang.id + ";" + avgang.routeID+";" + avgang.stopID+ ";" + avgang.time +"\n");
+            writer.append("a;" + avgang.id + ";" + avgang.routeId+";" + avgang.stopId+ ";" + avgang.time +"\n");
         }
 
         var allStops = cache.stops;
+        System.out.println("Writing " + allStops.size()+ " stops to textfile");
         for(int i = 0; i < allStops.size(); i++){
             Stop stop = allStops.get(i);
 
@@ -64,6 +67,7 @@ public class DatabaseText implements IDatabase{
         }
 
         var allRoutes = cache.routes;
+        System.out.println("Writing " + allRoutes.size()+ " routes to textfile");
         for(int i = 0; i < allRoutes.size(); i++){
             Route rute = allRoutes.get(i);
             String stop = "";
@@ -78,13 +82,20 @@ public class DatabaseText implements IDatabase{
             writer.append("r;"+rute.id +";"+stop+"\n");
         }
 
+        var formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         var allTickets = cache.tickets;
+        System.out.println("Writing " + allTickets.size()+ " tickets to textfile");
         for(int i = 0; i < allTickets.size(); i++){
-            Ticket billett = allTickets.get(i);
-            writer.append("i;" + billett.id + ";" + billett.type + ";" +billett.validFrom + ";" + billett.validTo + "\n");
+            Ticket ticket = allTickets.get(i);
+            String zoneString = "";
+            for (int j = 0; j< ticket.validForZones.size(); j++){
+                zoneString+=ticket.validForZones.get(j) + ",";
+            }
+            writer.append("i;" + ticket.id + ";" + ticket.type + ";" +ticket.validFrom.format(formatter) + ";" + ticket.validTo.format(formatter) + ";" + zoneString + "\n");
         }
 
         var allUsers = cache.users;
+        System.out.println("Writing " + allUsers.size()+ " users to textfile");
         for(int i = 0; i < allUsers.size(); i++){
             User bruker = allUsers.get(i);
             String aktiveb = "";
@@ -114,12 +125,8 @@ public class DatabaseText implements IDatabase{
     public RepositoryDataCache requestCacheData() throws Exception{
         BufferedReader reader = new BufferedReader(new FileReader(path));
         RepositoryDataCache cache = new RepositoryDataCache();
-        cache.users = new ArrayList<>();
-        cache.tickets = new ArrayList<>();
-        cache.stops = new ArrayList<>();
-        cache.routes = new ArrayList<>();
-        cache.departures = new ArrayList<>();
 
+        var formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String line;
         while ((line = reader.readLine()) != null){
             if(line.startsWith("a;")){
@@ -163,36 +170,40 @@ public class DatabaseText implements IDatabase{
                     }
                 }
 
-
                 cache.routes.add(
                     new Route(Integer.parseInt(bits[1]),stop)
                 );
-
+            
             }else if(line.startsWith("i;")){
                 String[] bits = line.split(";");
-                Ticket billett = new Ticket(Ticket.Type.valueOf(bits[2]), LocalDateTime.parse(bits[3]));
-                cache.tickets.add(billett);
+                Ticket ticket = new Ticket(Ticket.Type.valueOf(bits[2]), LocalDateTime.parse(bits[3],formatter));
+                ticket.id = Integer.parseInt(bits[1]);
+                ticket.validTo = LocalDateTime.parse(bits[4],formatter);
+                for(String zone: bits[5].split(",")){
+                    ticket.addZone(Integer.parseInt(zone));
+                }
+                cache.tickets.add(ticket);
 
             }else if(line.startsWith("b;")){
                 String[] bits = line.split(";");
-                User bruker = new User(Integer.parseInt(bits[1]),bits[2]);
+                User user = new User(Integer.parseInt(bits[1]),bits[2]);
 
                 if(bits.length > 3){
                     String[] aktiveBilletterStr = bits[3].split(",");
                     for(String strId : aktiveBilletterStr){
                         Ticket billett = cache.tickets.get(Integer.parseInt(strId));
-                        bruker.activeTickets.add(billett);
+                        user.activeTickets.add(billett);
                     }
-
+                }
+                if(bits.length > 4){
                     String[] gamleBilletterStr = bits[4].split(",");
                     for(String strId : gamleBilletterStr){
                         Ticket billett = cache.tickets.get(Integer.parseInt(strId));
-                        bruker.oldTickets.add(billett);
+                        user.oldTickets.add(billett);
                     }
                 }
 
-
-                cache.users.add(bruker);
+                cache.users.add(user);
             }
         }
         reader.close();

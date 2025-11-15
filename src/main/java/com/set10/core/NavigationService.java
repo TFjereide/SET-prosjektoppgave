@@ -1,7 +1,5 @@
 package com.set10.core;
 
-import java.nio.file.Path;
-import java.security.PrivateKey;
 import java.util.ArrayList;
 
 import com.set10.core.DTO.DepartureDTO;
@@ -34,8 +32,8 @@ public class NavigationService {
      */
     public Trip FindTrip(String nameA, String nameB){
   
-        int stopIdA = dataRepository.getStopID(nameA);
-        int stopIdB = dataRepository.getStopID(nameB);
+        int stopIdA = dataRepository.getStopIDByName(nameA);
+        int stopIdB = dataRepository.getStopIDByName(nameB);
 
         if( stopIdA == -1){
             return null;
@@ -55,7 +53,7 @@ public class NavigationService {
     }
 
     public boolean stopExists(String name){
-        if (dataRepository.getStopID(name) != -1){
+        if (dataRepository.getStopIDByName(name) != -1){
             return true;
         }
         return false;
