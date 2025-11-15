@@ -1,55 +1,30 @@
 package com.set10.application;
-import java.util.ArrayList;
 
-import com.set10.core.Navigasjonstjeneste;
-import com.set10.core.Stoppested;
+import com.set10.core.DummyDataRepository;
+import com.set10.core.NavigationService;
+import com.set10.core.UserDataService;
+import com.set10.database.DatabaseText;
 
-import imgui.ImGui;
 import imgui.app.Application;
-import imgui.app.Configuration;
 
-public class Main extends Application {
+public class Main {
 
-    // Slettes senere. Ikke bruk denne noesteds
-    private ArrayList<Stoppested> testStoppesteder = new ArrayList<>();
-
-    @Override
-    protected void configure(Configuration config) {
-        config.setTitle("Østfold trafikk premium");
-    }
-
-    // Denne kjøres (forhåpentligvis) 60 ganger i sekundet, og er hvor logikk for gui og lignende legges inn
-    @Override
-    public void process() {
-        ImGui.begin("Debug meny");
-    
-        // Kan lage enkle listefunksjoner Relativt enkelt
-        if(ImGui.collapsingHeader("Stoppesteder")){
-            ImGui.separator();
-            for (Stoppested stoppested : testStoppesteder) {
-                ImGui.text(stoppested.toString());   
-                ImGui.separator();
-            }
+    public static void main(String[] args) {    
+        System.out.println("Starting application");    
+        DummyDataRepository datarepository = new DummyDataRepository(new DatabaseText());
+        try{
+            datarepository.loadFromDisk();
+        }catch(Exception e){
+            e.printStackTrace();
+            datarepository.generateDummyData();
         }
-        ImGui.end();
+        NavigationService navigationService = new NavigationService(datarepository);
+        UserDataService userDataService = new UserDataService(datarepository);
 
-        // uncomment hvis du vil se mer på hva imgui kan gjøre.
-        // ImGui.showDemoWindow();
-    }
-
-    // Dette er initialiseringskode, som kjøres før oppstart av programmet.
-    @Override
-    protected void preRun(){
+        // Application her, fra ImGui, starter en native applikasjon og vindu, med debug
+        // gui og lignende funksjonalitet. Ikke nødvendig for at programmet fungerer, men 
+        // for å kunne visualisere hvordan ting fungerer.
+        Application.launch(new DebugView(navigationService, userDataService, datarepository));
         
-        for(int i = 0; i < 5; i+=1){
-            testStoppesteder.add(
-                new Stoppested(i, "tilfeldig addresse")
-            );
-        }
-    }
-    
-    // Starter bare applikasjonen. Burde kanskje ikke røres
-    public static void main(String[] args) {
-        launch(new Main());
     }
 }
