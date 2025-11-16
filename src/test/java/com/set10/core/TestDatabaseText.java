@@ -1,17 +1,12 @@
 package com.set10.core;
 
-// import com.set10.core.Datadepot;
-// import com.set10.core.Stoppested;
 import com.set10.database.DatabaseText;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-// import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class Test_DatabaseText {
+public class TestDatabaseText {
     
     @Test
     @DisplayName("testSerialiseringOgDeserialisering")

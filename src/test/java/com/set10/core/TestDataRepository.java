@@ -19,10 +19,10 @@ import com.set10.database.DatabaseText;
 /**
  * @implNote in the current implementation testing getters will seem a bit silly,
  * but they will in the future be fetched in another way than the dead simple current one.
- * If, for example, the database is an _actual_ database, the reslts will need to match.
+ * If, for example, the database is an _actual_ database, the results will need to match.
  * Therefore, in the future, these tests will end up more important.
  */
-public class Test_DataRepository {
+public class TestDataRepository {
 
     ArrayList<IDataRepository> repositoryTypes;
 
