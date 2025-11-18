@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class TestDatabaseText {
     
     @Test
-    @DisplayName("testSerialiseringOgDeserialisering")
+    @DisplayName("test Serialisering Og Deserialisering")
     void testSerialiseringOgDeserialisering(){
         DatabaseText dbt = new DatabaseText("data/testdata.txt");
         DummyDataRepository depot = new DummyDataRepository(dbt);
@@ -42,7 +42,7 @@ public class TestDatabaseText {
         for(int i = 0; i< depot.userCache.size(); i++){
             User b1 = depot.userCache.get(i);
             User b2 = depot2.userCache.get(i);
-            assertEquals(b1.id, b2.id);
+            assertEquals(b1, b2);
         }
     }
 
@@ -70,7 +70,7 @@ public class TestDatabaseText {
         for(int i = 0; i < depot.ticketCache.size(); i++){
             Ticket b1 = depot.ticketCache.get(i);
             Ticket b2 = depot2.ticketCache.get(i);
-            assertEquals(b1.id, b2.id, "Deserialized ticket id="+b2.id+" does not match id="+b1.id);
+            assertEquals(b1, b2);
         }
     }
 
@@ -98,7 +98,7 @@ public class TestDatabaseText {
         for(int i = 0; i < depot.stopCache.size(); i++){
             Stop b1 = depot.stopCache.get(i);
             Stop b2 = depot2.stopCache.get(i);
-            assertEquals(b1.id, b2.id);
+            assertEquals(b1, b2);
         }
 
     }
@@ -128,7 +128,7 @@ public class TestDatabaseText {
         for(int i = 0; i< depot.routeCache.size(); i++){
             Route b1 = depot.routeCache.get(i);
             Route b2 = depot2.routeCache.get(i);
-            assertEquals(b1.id, b2.id);
+            assertEquals(b1, b2);
         }
     }
     
@@ -156,7 +156,7 @@ public class TestDatabaseText {
         for(int i = 0; i< depot.departureCache.size(); i++){
             Departure b1 = depot.departureCache.get(i);
             Departure b2 = depot2.departureCache.get(i);
-            assertEquals(b1.id, b2.id);
+            assertEquals(b1, b2);
         }
 
     }
