@@ -7,11 +7,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestDatabaseText {
+    final static String testDataPath = "data/testdata.txt";
     
     @Test
     @DisplayName("test Serialisering Og Deserialisering")
     void testSerialiseringOgDeserialisering(){
-        DatabaseText dbt = new DatabaseText("data/testdata.txt");
+        DatabaseText dbt = new DatabaseText(testDataPath);
         DummyDataRepository depot = new DummyDataRepository(dbt);
         depot.generateDummyData();
         assertDoesNotThrow(depot::saveToDisk);
@@ -21,7 +22,7 @@ public class TestDatabaseText {
     @Test
     @DisplayName("serialiseringsintegritet for brukere")
     void testBrukerSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data/testdata.txt");
+        DatabaseText dbt = new DatabaseText(testDataPath);
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -49,7 +50,7 @@ public class TestDatabaseText {
     @Test
     @DisplayName("serialiseringsintegritet for Billetter")
     void testBillettSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data∕testdata.txt");
+        DatabaseText dbt = new DatabaseText(testDataPath);
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -77,7 +78,7 @@ public class TestDatabaseText {
     @Test
     @DisplayName("serialiseringsintegritet for stoppested")
     void testStoppestedSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data/testdata.txt");
+        DatabaseText dbt = new DatabaseText(testDataPath);
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -108,7 +109,7 @@ public class TestDatabaseText {
     @Test
     @DisplayName("serialiseringsintegritet for stoppested")
     void testRuterSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data/testdata.txt");
+        DatabaseText dbt = new DatabaseText(testDataPath);
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
@@ -135,7 +136,7 @@ public class TestDatabaseText {
     @Test
     @DisplayName("serialiseringsintegritet for avganger")
     void testAvgangSerialiseringsintegritet(){
-        DatabaseText dbt = new DatabaseText("data/testdata.txt");
+        DatabaseText dbt = new DatabaseText(testDataPath);
         DummyDataRepository depot = new DummyDataRepository(dbt); 
         DummyDataRepository depot2 = new DummyDataRepository(dbt); 
 
