@@ -222,7 +222,7 @@ public class DebugView extends Application {
                 }
 
             }else{
-                ImGui.textDisabled("Give user valid ticket for trip.");
+                ImGui.textDisabled("Cannot give user valid ticket. No active trip.");
             }
 
             User user = datarepository.getUser(selectedUserId);

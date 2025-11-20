@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
-public class Test_UserDataService {
+public class TestUserDataService {
 
     UserDataService userDataService;
 
@@ -33,6 +33,7 @@ public class Test_UserDataService {
     @DisplayName("give user ticket for trip")
     public void testGiveUserTicketForTrip(){
         Trip trip = new Trip();
+        trip.zones.add(0);
         assertTrue(userDataService.setUserActiveTrip(trip, 0));
         assertNotNull(userDataService.giveUserTicketForTrip(0, Ticket.Type.Single, trip));
         assertNotNull(userDataService.giveUserTicketForTrip(0, Ticket.Type.Period, trip));

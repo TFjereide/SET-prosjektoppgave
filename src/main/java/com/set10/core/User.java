@@ -25,12 +25,47 @@ public class User {
         this.oldTickets = new ArrayList<>();
     }
 
+    public String getDisplayName() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if (object == this){
+            return true;
+        }
+        if(!(object instanceof User)){
+            return false;
+        }
+
+        User other = (User) object;
+
+        if( other.id != id){return false;}
+        
+        if(!other.name.equals(name)){return false;}
+        
+        if(activeTickets.size() != other.activeTickets.size()){return false;}
+
+        if(oldTickets.size() != other.oldTickets.size()){return false;}
+
+        for (int i = 0; i < activeTickets.size();i++){
+            if(!activeTickets.get(i).equals(other.activeTickets.get(i))){
+                return false;
+            }
+        }
+        
+        for (int i = 0; i < oldTickets.size();i++){
+            if(! oldTickets.get(i).equals(other. oldTickets.get(i))){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
     @Override
     public String toString(){
          return "Id: " + id + " name: " + name;
     }
     
-    public String getDisplayName() {
-        return name;
-    }
 }

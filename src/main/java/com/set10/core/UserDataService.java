@@ -39,6 +39,9 @@ public class UserDataService {
             return null;
         }
         Ticket ticket = dataRepository.createTicket(type, trip.zones, LocalDateTime.now());
+        if (ticket == null){
+            return null;
+        }
         user.activeTickets.add(ticket);
         return ticket;
     }

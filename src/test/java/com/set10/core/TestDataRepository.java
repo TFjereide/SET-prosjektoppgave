@@ -19,11 +19,13 @@ import com.set10.database.DatabaseText;
 /**
  * @implNote in the current implementation testing getters will seem a bit silly,
  * but they will in the future be fetched in another way than the dead simple current one.
- * If, for example, the database is an _actual_ database, the reslts will need to match.
+ * If, for example, the database is an _actual_ database, the results will need to match.
  * Therefore, in the future, these tests will end up more important.
  */
-public class Test_DataRepository {
+public class TestDataRepository {
 
+    // Meant to represent the different types of repositories that should be tested.
+    // they should all exhibit the same expected behaviour.
     ArrayList<IDataRepository> repositoryTypes;
 
     @BeforeEach
@@ -61,6 +63,19 @@ public class Test_DataRepository {
 
             assertNull(repo.getStop(Integer.MIN_VALUE));
             assertNull(repo.getStop(Integer.MAX_VALUE));
+        }
+    }
+
+    @Test
+    @DisplayName("get stops by name")
+    public void testGetStopByName(){
+        for(IDataRepository repo: repositoryTypes){
+            assertNotNull(repo.getStopByName("Fiskebrygga"),"Can't find stop using case-sensitive names!");
+            assertNotNull(repo.getStopByName("halden bussterminal"), "Can't find stop using case-insensitive names!");
+
+            assertNull(repo.getStopByName("New york central station"));
+            assertNull(repo.getStopByName(""));
+            assertNull(repo.getStopByName(null));
         }
     }
 

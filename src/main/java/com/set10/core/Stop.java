@@ -44,6 +44,49 @@ public class Stop {
     }
 
     @Override
+    public boolean equals(Object object){
+        if (object == this){
+            return true;
+        }
+        if(!(object instanceof Stop)){
+            return false;
+        }
+
+        Stop other = (Stop) object;
+
+        if(departures.size()!= other.departures.size()){
+            System.err.println("departures is not the same");
+            return false;
+        }
+        for(int i = 0; i < departures.size(); i++){
+            if(!departures.get(i).equals(other.departures.get(i))){
+                System.err.println("departure " + i + " is not the same!");
+                return false;
+            }
+        }
+
+
+        if (!routes.equals(other.routes)){
+            System.err.println("routes is not the same");
+            return false;
+        }
+        if( other.id != id){
+            System.err.println("id is not the same");
+            return false;
+        }
+        if(!other.name.equals(name)){
+            System.err.println("name is not the same");
+            return false;
+        }
+        if(other.zone != zone){
+            System.err.println("zone is not the same");
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "ID: " + id + " name: '" + name + "'";
     }

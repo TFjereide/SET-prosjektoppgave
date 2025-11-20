@@ -31,6 +31,34 @@ public class Route {
         return new ArrayList<>(soner);
     }
 
+    @Override
+    public boolean equals(Object object){
+        if (object == this){
+            return true;
+        }
+        if(!(object instanceof Route)){
+            return false;
+        }
+
+        Route other = (Route) object;
+
+        if( other.id != id){
+            return false;
+        }
+
+        if(stops.size() != other.stops.size()){
+            return false;
+        }
+
+        for (int i = 0; i < stops.size();i++){
+            if(!stops.get(i).equals(other.stops.get(i))){
+                return false;
+            }
+        } 
+        return true;
+    }
+
+
     public String toString(){
         return "Rute: " + this.id;
     }
