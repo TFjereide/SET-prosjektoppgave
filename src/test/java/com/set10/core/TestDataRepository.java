@@ -24,6 +24,8 @@ import com.set10.database.DatabaseText;
  */
 public class TestDataRepository {
 
+    // Meant to represent the different types of repositories that should be tested.
+    // they should all exhibit the same expected behaviour.
     ArrayList<IDataRepository> repositoryTypes;
 
     @BeforeEach
@@ -61,6 +63,19 @@ public class TestDataRepository {
 
             assertNull(repo.getStop(Integer.MIN_VALUE));
             assertNull(repo.getStop(Integer.MAX_VALUE));
+        }
+    }
+
+    @Test
+    @DisplayName("get stops by name")
+    public void testGetStopByName(){
+        for(IDataRepository repo: repositoryTypes){
+            assertNotNull(repo.getStopByName("Fiskebrygga"),"Can't find stop using case-sensitive names!");
+            assertNotNull(repo.getStopByName("Halden bussterminal"), "Can't find stop using case-insensitive names!");
+
+            assertNull(repo.getStopByName("New york central station"));
+            assertNull(repo.getStopByName(""));
+            assertNull(repo.getStopByName(null));
         }
     }
 
