@@ -71,7 +71,7 @@ public class TestDataRepository {
     public void testGetStopByName(){
         for(IDataRepository repo: repositoryTypes){
             assertNotNull(repo.getStopByName("Fiskebrygga"),"Can't find stop using case-sensitive names!");
-            assertNotNull(repo.getStopByName("Halden bussterminal"), "Can't find stop using case-insensitive names!");
+            assertNotNull(repo.getStopByName("halden bussterminal"), "Can't find stop using case-insensitive names!");
 
             assertNull(repo.getStopByName("New york central station"));
             assertNull(repo.getStopByName(""));
