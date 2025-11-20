@@ -12,10 +12,10 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <!-- <testSourceDirectory>src/test/java</testSourceDirectory> -->
     </properties>
 
-    <build>
+    <!-- <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -28,7 +28,7 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
+    </build> -->
 
     <dependencyManagement>
 		<dependencies>
