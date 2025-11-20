@@ -12,23 +12,9 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <!-- <testSourceDirectory>src/test/java</testSourceDirectory> -->
     </properties>
 
-    <!-- <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
-                <configuration>
-                    <excludes>
-                        <exclude>some test to exclude here</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build> -->
+
 
     <dependencyManagement>
 		<dependencies>
