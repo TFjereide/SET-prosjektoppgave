@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 
 
 /**
- * Service for validating tickets -- for now just a static stub
+ * Service for validating tickets -- for now just a static stub with trivial logic
  */
 public class TicketValidationService {
     

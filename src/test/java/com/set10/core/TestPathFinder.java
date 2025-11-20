@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.set10.database.DatabaseText;
 
 @DisplayName("Test Pathfinder")
-public class Test_PathFinder {
+public class TestPathFinder {
 
     public DummyDataRepository repo;
     public PathFinder pathfinder;
@@ -77,7 +77,7 @@ public class Test_PathFinder {
 
     @Test
     @DisplayName("test creating nodegraph")
-    public void TestCreateNodegraph(){
+    public void testCreateNodegraph(){
         
         assertEquals(true, graph.nodes.size() > 0, "The nodegraph was not initialized!");
         {
@@ -112,7 +112,7 @@ public class Test_PathFinder {
 
     @Test
     @DisplayName("Test Calculate path")
-    public void TestCalculatePath(){
+    public void testCalculatePath(){
         
         {
             int start = repo.getStopIDByName("start 1");
@@ -156,7 +156,7 @@ public class Test_PathFinder {
     
     @Test
     @DisplayName("Test Calculate impossible path")
-    public void TestCalculateImpossiblePath(){
+    public void testCalculateImpossiblePath(){
         
         {
             int start = repo.getStopIDByName("end 2");
@@ -184,7 +184,7 @@ public class Test_PathFinder {
 
     @Test
     @DisplayName("Test Calculate no length path")
-    public void TestCalculateNoLengthPath(){
+    public void testCalculateNoLengthPath(){
         
         {
             int start = repo.getStopIDByName("A");
